@@ -63,10 +63,10 @@ export interface QuizItem {
 export interface RoundResult {
   item: QuizItem;
   player: string;
-  correct: boolean;
   points: number;
-  // Time taken to answer, in milliseconds (used for the speed bonus + history).
-  answeredMs: number;
+  primaryCorrect: boolean;
+  // undefined when the category has no secondary question.
+  secondaryCorrect?: boolean;
 }
 
 export interface GameState {

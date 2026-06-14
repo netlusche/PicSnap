@@ -30,6 +30,33 @@ export const translations = {
     comingSoon: 'Game loop coming in the next step.',
     roundLabel: 'Round',
 
+    // Game loop
+    passTo: 'Pass the device to',
+    beginTurn: 'Begin Turn',
+    getReady: 'Get ready…',
+    correct: 'Correct!',
+    wrong: 'Wrong!',
+    timeUp: "Time's up!",
+    points: 'points',
+    totalScore: 'Total Score',
+    nextPlayer: 'Next',
+    answer: 'Answer',
+
+    // Per-step question prompts
+    q_places_primary: 'What is it?',
+    q_places_secondary: 'Which country?',
+    q_geo_primary: 'Which city?',
+    q_geo_secondary: 'Which country?',
+    q_people_primary: 'Who is it?',
+    q_people_secondary: 'Known for?',
+    q_bands_primary: 'Who / which band?',
+    q_bands_secondary: 'Genre?',
+    q_movies_primary: 'Which movie / series?',
+    q_sport_primary: 'Who / what?',
+    q_sport_secondary: 'Which club or country?',
+    q_history_primary: 'What is shown?',
+    q_history_secondary: 'When (roughly)?',
+
     // Category names
     cat_places: 'Places & Cities',
     cat_geo: 'Geo-Roulette',
@@ -77,6 +104,33 @@ export const translations = {
     startOver: 'Neu starten',
     comingSoon: 'Die Spielschleife folgt im nächsten Schritt.',
     roundLabel: 'Runde',
+
+    // Game loop
+    passTo: 'Gerät weitergeben an',
+    beginTurn: 'Runde starten',
+    getReady: 'Bereit machen…',
+    correct: 'Richtig!',
+    wrong: 'Falsch!',
+    timeUp: 'Zeit abgelaufen!',
+    points: 'Punkte',
+    totalScore: 'Punktestand',
+    nextPlayer: 'Weiter',
+    answer: 'Antwort',
+
+    // Per-step question prompts
+    q_places_primary: 'Was ist das?',
+    q_places_secondary: 'Welches Land?',
+    q_geo_primary: 'Welche Stadt?',
+    q_geo_secondary: 'Welches Land?',
+    q_people_primary: 'Wer ist das?',
+    q_people_secondary: 'Womit bekannt?',
+    q_bands_primary: 'Wer / welche Band?',
+    q_bands_secondary: 'Genre?',
+    q_movies_primary: 'Welcher Film / Serie?',
+    q_sport_primary: 'Wer / was?',
+    q_sport_secondary: 'Welcher Verein oder Land?',
+    q_history_primary: 'Was ist zu sehen?',
+    q_history_secondary: 'Wann (grob)?',
 
     // Category names
     cat_places: 'Orte & Städte',

@@ -3,6 +3,9 @@ import { GameProvider, useGame } from './state/GameContext';
 import { BackgroundEffects } from './components/BackgroundEffects';
 import { SetupScreen } from './components/SetupScreen';
 import { CategoryScreen } from './components/CategoryScreen';
+import { PassDeviceScreen } from './components/PassDeviceScreen';
+import { QuizScreen } from './components/QuizScreen';
+import { TurnResultScreen } from './components/TurnResultScreen';
 import { translations } from './i18n/translations';
 import { CATEGORIES } from './data/categories';
 
@@ -41,6 +44,12 @@ const MainContent: React.FC = () => {
       return <SetupScreen />;
     case 'CATEGORY_SELECTION':
       return <CategoryScreen />;
+    case 'PASS_DEVICE':
+      return <PassDeviceScreen />;
+    case 'QUIZ':
+      return <QuizScreen />;
+    case 'TURN_RESULT':
+      return <TurnResultScreen />;
     default:
       return <PlaceholderScreen />;
   }

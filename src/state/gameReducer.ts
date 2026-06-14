@@ -1,4 +1,4 @@
-import { GameState, Language, Theme, Player, CategoryId, QuizItem } from '../types';
+import { GameState, Language, Theme, Player, CategoryId, QuizItem, GamePhase } from '../types';
 
 export type GameAction =
   | { type: 'SET_THEME'; payload: { theme: Theme } }
@@ -6,6 +6,9 @@ export type GameAction =
   | { type: 'CONTINUE_TO_CATEGORIES'; payload: { players: Player[]; totalRounds: number; lang: Language } }
   | { type: 'SET_POOL'; payload: { pool: QuizItem[] } }
   | { type: 'START_GAME'; payload: { categories: CategoryId[] } }
+  | { type: 'BEGIN_TURN'; payload: { item: QuizItem } }
+  | { type: 'END_TURN'; payload: { points: number; primaryCorrect: boolean; secondaryCorrect?: boolean } }
+  | { type: 'NEXT_TURN' }
   | { type: 'RESET_GAME' };
 
 export const initialState: GameState = {
@@ -50,6 +53,52 @@ export const gameReducer = (state: GameState, action: GameAction): GameState => 
         currentItem: null,
         turnPoints: 0,
       };
+    case 'BEGIN_TURN':
+      return {
+        ...state,
+        phase: 'QUIZ',
+        currentItem: action.payload.item,
+        turnPoints: 0,
+      };
+    case 'END_TURN': {
+      const { points, primaryCorrect, secondaryCorrect } = action.payload;
+      const idx = state.currentPlayerIndex;
+      const updatedPlayers = state.players.map((p, i) =>
+        i === idx ? { ...p, score: p.score + points } : p
+      );
+      const playerName = state.players[idx]?.name || `Player ${idx + 1}`;
+      return {
+        ...state,
+        phase: 'TURN_RESULT',
+        players: updatedPlayers,
+        turnPoints: points,
+        history: state.currentItem
+          ? [...state.history, { item: state.currentItem, player: playerName, points, primaryCorrect, secondaryCorrect }]
+          : state.history,
+      };
+    }
+    case 'NEXT_TURN': {
+      let nextPlayerIndex = state.currentPlayerIndex + 1;
+      let nextRound = state.currentRound;
+      let nextPhase: GamePhase = 'PASS_DEVICE';
+
+      if (nextPlayerIndex >= state.players.length) {
+        nextPlayerIndex = 0;
+        nextRound++;
+      }
+      if (nextRound > state.totalRounds) {
+        nextPhase = 'FINAL_RESULTS';
+      }
+
+      return {
+        ...state,
+        currentPlayerIndex: nextPlayerIndex,
+        currentRound: nextRound,
+        phase: nextPhase,
+        currentItem: null,
+        turnPoints: 0,
+      };
+    }
     case 'RESET_GAME':
       // Keep the chosen theme + language; reset everything else.
       return { ...initialState, theme: state.theme, lang: state.lang };
