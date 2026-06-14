@@ -25,9 +25,11 @@ const PlaceholderScreen: React.FC = () => {
       <h1 className="gigantic title-gradient">{t.appName}</h1>
       <p className="subtitle">{t.comingSoon}</p>
       <div className="score-badge mt-4">
-        <span className="score-label">{state.players.length} {t.setupPlayers} · {state.totalRounds} {t.setupRounds}</span>
+        <span className="score-value">{state.pool.length}</span>
+        <span className="score-label">images in pool</span>
       </div>
-      <p className="text-muted" style={{ maxWidth: '24rem', marginTop: '0.5rem' }}>{catNames}</p>
+      <p className="text-muted" style={{ marginTop: '0.5rem' }}>{state.players.length} {t.setupPlayers} · {state.totalRounds} {t.setupRounds}</p>
+      <p className="text-muted" style={{ maxWidth: '24rem' }}>{catNames}</p>
     </div>
   );
 };

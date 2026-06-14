@@ -3,7 +3,8 @@ import { useGame } from '../state/GameContext';
 import { translations } from '../i18n/translations';
 import { CATEGORIES } from '../data/categories';
 import { CategoryId } from '../types';
-import { Play, ChevronLeft } from 'lucide-react';
+import { buildImagePool } from '../services/imageFetcher';
+import { Play, ChevronLeft, Loader2 } from 'lucide-react';
 
 export const CategoryScreen: React.FC = () => {
   const { state, dispatch } = useGame();
@@ -12,19 +13,41 @@ export const CategoryScreen: React.FC = () => {
   const [selected, setSelected] = useState<CategoryId[]>(
     state.categories.length > 0 ? state.categories : []
   );
-  const [showNotice, setShowNotice] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  // 'empty'  -> no category selected; 'pool' -> not enough images fetched
+  const [notice, setNotice] = useState<null | 'empty' | 'pool'>(null);
 
   const toggle = (id: CategoryId) => {
     setSelected((prev) => (prev.includes(id) ? prev.filter((c) => c !== id) : [...prev, id]));
   };
 
-  const handleStart = () => {
+  const handleStart = async () => {
     if (selected.length === 0) {
-      setShowNotice(true);
+      setNotice('empty');
       return;
     }
-    // The image pool is fetched in a later step; for now we advance the phase.
-    dispatch({ type: 'START_GAME', payload: { categories: selected } });
+    setIsLoading(true);
+    try {
+      const pool = await buildImagePool(selected, state.players.length, state.totalRounds, state.lang);
+
+      // Pre-game pool validation: need one unique image per turn, plus at least
+      // 4 distinct answers so the multiple choice can be built.
+      const required = state.players.length * state.totalRounds;
+      const distinctAnswers = new Set(pool.map((p) => p.answers.primary)).size;
+
+      if (pool.length < required || distinctAnswers < 4) {
+        setNotice('pool');
+        setIsLoading(false);
+        return;
+      }
+
+      dispatch({ type: 'SET_POOL', payload: { pool } });
+      dispatch({ type: 'START_GAME', payload: { categories: selected } });
+    } catch {
+      setNotice('pool');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -33,8 +56,14 @@ export const CategoryScreen: React.FC = () => {
         <button
           className="icon-button outline"
           style={{ width: 44, height: 44 }}
-          onClick={() => dispatch({ type: 'CONTINUE_TO_CATEGORIES', payload: { players: state.players, totalRounds: state.totalRounds, lang: state.lang } })}
+          onClick={() =>
+            dispatch({
+              type: 'CONTINUE_TO_CATEGORIES',
+              payload: { players: state.players, totalRounds: state.totalRounds, lang: state.lang },
+            })
+          }
           aria-label={t.back}
+          disabled={isLoading}
         >
           <ChevronLeft size={20} />
         </button>
@@ -54,6 +83,7 @@ export const CategoryScreen: React.FC = () => {
               className={`category-card ${isActive ? 'active' : ''}`}
               onClick={() => toggle(cat.id)}
               aria-pressed={isActive}
+              disabled={isLoading}
             >
               <span className="cat-emoji" aria-hidden="true">{cat.emoji}</span>
               <span className="cat-text">
@@ -67,22 +97,32 @@ export const CategoryScreen: React.FC = () => {
       </div>
 
       <button
-        className={`option-button primary large mt-4 ${selected.length === 0 ? 'visually-disabled' : ''}`}
+        className={`option-button primary large mt-4 ${selected.length === 0 || isLoading ? 'visually-disabled' : ''}`}
         onClick={handleStart}
+        disabled={isLoading}
       >
-        <Play size={20} className="icon" />
-        <span>{t.start}</span>
+        {isLoading ? (
+          <>
+            <Loader2 size={20} className="icon" style={{ animation: 'spin 1s linear infinite' }} />
+            <span>{t.loadingImages}</span>
+          </>
+        ) : (
+          <>
+            <Play size={20} className="icon" />
+            <span>{t.start}</span>
+          </>
+        )}
       </button>
 
-      {showNotice && (
-        <div className="modal-overlay" onClick={() => setShowNotice(false)}>
+      {notice && (
+        <div className="modal-overlay" onClick={() => setNotice(null)}>
           <div
             style={{
               background: 'var(--card)',
               border: '2px solid var(--border-hover)',
               borderRadius: '16px',
               padding: '1.5rem',
-              maxWidth: '320px',
+              maxWidth: '340px',
               width: '100%',
               textAlign: 'center',
               boxShadow: '0 20px 40px rgba(0,0,0,0.5)',
@@ -94,9 +134,9 @@ export const CategoryScreen: React.FC = () => {
               {t.noticeTitle}
             </h3>
             <p className="text-muted" style={{ margin: '0 0 1.25rem 0', fontSize: '0.95rem', lineHeight: 1.4 }}>
-              {t.selectAtLeastOne}
+              {notice === 'empty' ? t.selectAtLeastOne : t.poolTooFew}
             </p>
-            <button className="option-button primary w-full" style={{ minHeight: '44px' }} onClick={() => setShowNotice(false)}>
+            <button className="option-button primary w-full" style={{ minHeight: '44px' }} onClick={() => setNotice(null)}>
               {t.ok}
             </button>
           </div>

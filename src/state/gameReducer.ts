@@ -1,9 +1,10 @@
-import { GameState, Language, Theme, Player, CategoryId } from '../types';
+import { GameState, Language, Theme, Player, CategoryId, QuizItem } from '../types';
 
 export type GameAction =
   | { type: 'SET_THEME'; payload: { theme: Theme } }
   | { type: 'SET_LANG'; payload: { lang: Language } }
   | { type: 'CONTINUE_TO_CATEGORIES'; payload: { players: Player[]; totalRounds: number; lang: Language } }
+  | { type: 'SET_POOL'; payload: { pool: QuizItem[] } }
   | { type: 'START_GAME'; payload: { categories: CategoryId[] } }
   | { type: 'RESET_GAME' };
 
@@ -36,6 +37,8 @@ export const gameReducer = (state: GameState, action: GameAction): GameState => 
         lang: action.payload.lang,
         phase: 'CATEGORY_SELECTION',
       };
+    case 'SET_POOL':
+      return { ...state, pool: action.payload.pool };
     case 'START_GAME':
       return {
         ...state,

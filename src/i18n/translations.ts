@@ -20,6 +20,8 @@ export const translations = {
     start: 'Start Game',
     noticeTitle: 'Notice',
     selectAtLeastOne: 'Please select at least one category before starting the game.',
+    loadingImages: 'Loading images…',
+    poolTooFew: 'Too few images for this configuration — please choose fewer rounds or enable more categories.',
     ok: 'OK',
     back: 'Back',
 
@@ -66,6 +68,8 @@ export const translations = {
     start: 'Spiel starten',
     noticeTitle: 'Hinweis',
     selectAtLeastOne: 'Bitte wähle mindestens eine Kategorie aus, bevor du das Spiel startest.',
+    loadingImages: 'Bilder werden geladen…',
+    poolTooFew: 'Zu wenige Bilder für diese Konfiguration — bitte weniger Runden wählen oder weitere Kategorien aktivieren.',
     ok: 'OK',
     back: 'Zurück',
 
