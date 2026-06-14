@@ -1,5 +1,6 @@
 import React from 'react';
 import { GameProvider, useGame } from './state/GameContext';
+import { BackgroundEffects } from './components/BackgroundEffects';
 import { translations } from './i18n/translations';
 import { Theme, Language } from './types';
 
@@ -33,7 +34,11 @@ const MainApp: React.FC = () => {
   }, [state.theme]);
 
   return (
-    <div className="screen center-content fade-in">
+    <>
+      {/* Rendered outside the .fade-in container: its transform would otherwise
+          become the containing block for the position:fixed canvas and offset it. */}
+      <BackgroundEffects />
+      <div className="screen center-content fade-in">
       <div className="icon-container primary-glow active-bounce" aria-hidden="true">
         <span style={{ fontSize: '2.5rem' }}>📸</span>
       </div>
@@ -68,7 +73,8 @@ const MainApp: React.FC = () => {
           </select>
         </label>
       </div>
-    </div>
+      </div>
+    </>
   );
 };
 
