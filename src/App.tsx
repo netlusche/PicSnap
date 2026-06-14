@@ -1,27 +1,48 @@
 import React from 'react';
 import { GameProvider, useGame } from './state/GameContext';
 import { BackgroundEffects } from './components/BackgroundEffects';
+import { SetupScreen } from './components/SetupScreen';
+import { CategoryScreen } from './components/CategoryScreen';
 import { translations } from './i18n/translations';
-import { Theme, Language } from './types';
+import { CATEGORIES } from './data/categories';
 
-// Theme list for the scaffold smoke-test selector. The full theme picker UI
-// (with canvas backgrounds) lands in Step 2.
-const THEMES: { id: Theme; label: string }[] = [
-  { id: 'default', label: 'Neon Party' },
-  { id: 'plain_white', label: 'Plain White' },
-  { id: 'plain_dark', label: 'Plain Dark' },
-  { id: 'matrix', label: 'Matrix' },
-  { id: 'vaporwave', label: 'Vaporwave' },
-  { id: 'westeros', label: 'Westeros' },
-  { id: 'sakura', label: 'Sakura' },
-  { id: 'lcars', label: 'LCARS' },
-  { id: 'frutiger_aero', label: 'Frutiger Aero' },
-  { id: 'synthwave', label: 'Synthwave' },
-  { id: 'heavy_metal', label: 'Heavy Metal' },
-  { id: 'post_punk', label: 'Post Punk' },
-  { id: 'rock_legends', label: 'Rock Legends' },
-  { id: 'kraftwerk', label: 'Kraftwerk' },
-];
+// Temporary placeholder for phases not yet implemented (PASS_DEVICE, QUIZ,
+// TURN_RESULT, FINAL_RESULTS). Replaced as the game loop is built in later steps.
+const PlaceholderScreen: React.FC = () => {
+  const { state } = useGame();
+  const t = translations[state.lang as keyof typeof translations] || translations.en;
+  const catNames = state.categories
+    .map((id) => CATEGORIES.find((c) => c.id === id))
+    .filter(Boolean)
+    .map((c) => `${c!.emoji} ${(t as Record<string, string>)[c!.nameKey]}`)
+    .join(', ');
+
+  return (
+    <div className="screen center-content fade-in">
+      <div className="icon-container primary-glow active-bounce" aria-hidden="true">
+        <span style={{ fontSize: '2.5rem' }}>📸</span>
+      </div>
+      <h1 className="gigantic title-gradient">{t.appName}</h1>
+      <p className="subtitle">{t.comingSoon}</p>
+      <div className="score-badge mt-4">
+        <span className="score-label">{state.players.length} {t.setupPlayers} · {state.totalRounds} {t.setupRounds}</span>
+      </div>
+      <p className="text-muted" style={{ maxWidth: '24rem', marginTop: '0.5rem' }}>{catNames}</p>
+    </div>
+  );
+};
+
+const MainContent: React.FC = () => {
+  const { state } = useGame();
+  switch (state.phase) {
+    case 'SETUP':
+      return <SetupScreen />;
+    case 'CATEGORY_SELECTION':
+      return <CategoryScreen />;
+    default:
+      return <PlaceholderScreen />;
+  }
+};
 
 const MainApp: React.FC = () => {
   const { state, dispatch } = useGame();
@@ -35,45 +56,16 @@ const MainApp: React.FC = () => {
 
   return (
     <>
-      {/* Rendered outside the .fade-in container: its transform would otherwise
-          become the containing block for the position:fixed canvas and offset it. */}
+      {/* Rendered outside any animated/transformed container so the position:fixed
+          canvas stays anchored to the viewport (see BackgroundEffects). */}
       <BackgroundEffects />
-      <div className="screen center-content fade-in">
-      <div className="icon-container primary-glow active-bounce" aria-hidden="true">
-        <span style={{ fontSize: '2.5rem' }}>📸</span>
-      </div>
+      <MainContent />
 
-      <h1 className="gigantic title-gradient">{t.appName}</h1>
-      <p className="subtitle">{t.tagline}</p>
-      <p className="text-muted" style={{ maxWidth: '24rem' }}>{t.scaffoldNotice}</p>
-
-      <div className="flex items-center" style={{ gap: '0.75rem', marginTop: '1.5rem', flexWrap: 'wrap', justifyContent: 'center' }}>
-        <label className="theme-select-container">
-          <span className="text-muted" style={{ marginRight: '0.5rem', fontSize: '0.85rem' }}>{t.theme}</span>
-          <select
-            className="theme-select"
-            value={state.theme}
-            onChange={(e) => dispatch({ type: 'SET_THEME', payload: { theme: e.target.value as Theme } })}
-          >
-            {THEMES.map((th) => (
-              <option key={th.id} value={th.id}>{th.label}</option>
-            ))}
-          </select>
-        </label>
-
-        <label className="theme-select-container">
-          <span className="text-muted" style={{ marginRight: '0.5rem', fontSize: '0.85rem' }}>{t.language}</span>
-          <select
-            className="theme-select"
-            value={state.lang}
-            onChange={(e) => dispatch({ type: 'SET_LANG', payload: { lang: e.target.value as Language } })}
-          >
-            <option value="en">English</option>
-            <option value="de">Deutsch</option>
-          </select>
-        </label>
-      </div>
-      </div>
+      {state.phase !== 'SETUP' && (
+        <button onClick={() => dispatch({ type: 'RESET_GAME' })} className="start-over-btn">
+          {t.startOver}
+        </button>
+      )}
     </>
   );
 };
