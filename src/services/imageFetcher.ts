@@ -186,21 +186,36 @@ export async function buildImagePool(
 
   const perCategory = await Promise.all(categories.map((cat) => buildForCategory(cat, target, lang)));
 
-  // Cap each category to its fair share before merging so no single category
-  // dominates the pool (e.g. Geo-Roulette returning 200 items vs. 30 from another).
-  const perCatQuota = Math.ceil(target / categories.length);
-  const capped = perCategory.map((items) => shuffleArray(items).slice(0, perCatQuota));
-
-  // Deduplicate by imageUrl.
+  // Deduplicate each category's results separately, then shuffle into per-category queues.
   const seen = new Set<string>();
-  let items = capped.flat().filter((i) => {
-    if (seen.has(i.imageUrl)) return false;
-    seen.add(i.imageUrl);
-    return true;
+  const catQueues = new Map<CategoryId, QuizItem[]>();
+  categories.forEach((cat, idx) => {
+    const deduped = perCategory[idx].filter((i) => {
+      if (seen.has(i.imageUrl)) return false;
+      seen.add(i.imageUrl);
+      return true;
+    });
+    catQueues.set(cat, shuffleArray(deduped));
   });
 
-  items = shuffleArray(items);
-  if (items.length > target) items = items.slice(0, target);
+  // Assign one category per round, cycling through a shuffled category list.
+  // This guarantees all players in the same round see the same category.
+  const catCycle = shuffleArray([...categories]);
+  const roundCategories: CategoryId[] = Array.from(
+    { length: rounds },
+    (_, i) => catCycle[i % catCycle.length]
+  );
 
-  return withDistractors(items);
+  // Draw exactly `players` items per round from the assigned category's queue.
+  const catPointers = new Map<CategoryId, number>();
+  const pool: QuizItem[] = [];
+  for (const cat of roundCategories) {
+    const queue = catQueues.get(cat) ?? [];
+    const ptr = catPointers.get(cat) ?? 0;
+    const slice = queue.slice(ptr, ptr + players);
+    if (slice.length > 0) pool.push(...slice);
+    catPointers.set(cat, ptr + players);
+  }
+
+  return withDistractors(pool);
 }
