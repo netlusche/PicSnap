@@ -64,6 +64,7 @@ const MainApp: React.FC = () => {
   const tr = t as Record<string, string>;
 
   const [showCats, setShowCats] = useState(false);
+  const [showScore, setShowScore] = useState(false);
   const [showRestart, setShowRestart] = useState(false);
 
   const inGame = ['PASS_DEVICE', 'QUIZ', 'TURN_RESULT'].includes(state.phase);
@@ -87,6 +88,9 @@ const MainApp: React.FC = () => {
         <div className="game-footer">
           <button className="game-footer-btn" onClick={() => setShowCats(true)}>
             {t.selectedCategories}
+          </button>
+          <button className="game-footer-btn" onClick={() => setShowScore(true)}>
+            {t.scoreBtn}
           </button>
           <button className="game-footer-btn" onClick={() => setShowRestart(true)}>
             {t.startOver}
@@ -113,6 +117,30 @@ const MainApp: React.FC = () => {
                   );
                 })}
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showScore && (
+        <div className="modal-overlay" onClick={() => setShowScore(false)}>
+          <div className="modal-card" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2 className="modal-title">{t.currentScore}</h2>
+              <button className="modal-close" onClick={() => setShowScore(false)}>✕</button>
+            </div>
+            <div className="modal-body">
+              <ol className="score-list">
+                {[...state.players]
+                  .sort((a, b) => b.score - a.score)
+                  .map((player, i) => (
+                    <li key={player.name} className="score-list-row">
+                      <span className="score-list-rank">{i + 1}</span>
+                      <span className="score-list-name">{player.name}</span>
+                      <span className="score-list-pts">{player.score}</span>
+                    </li>
+                  ))}
+              </ol>
             </div>
           </div>
         </div>
