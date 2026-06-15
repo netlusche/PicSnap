@@ -3,6 +3,9 @@ import { shuffleArray } from '../utils/arrayUtils';
 import { PLACES } from '../data/places';
 import { PEOPLE } from '../data/people';
 import { HISTORY } from '../data/historyItems';
+import { BANDS } from '../data/bands';
+import { MOVIES } from '../data/movies';
+import { SPORTS } from '../data/sports';
 import { CITIES } from '../data/cities';
 import { fetchCategoryImages } from './wikimedia';
 import { fetchLeadImages } from './wikipedia';
@@ -109,6 +112,36 @@ async function buildPeople(lang: Language): Promise<QuizItem[]> {
   return items;
 }
 
+/**
+ * Generic Wikipedia lead-image builder for Bands, Movies, Sport.
+ * Mirrors buildPeople() but takes a configurable entry shape via callbacks.
+ */
+async function buildFromWikipedia<T>(
+  entries: T[],
+  categoryId: CategoryId,
+  getWikiTitle: (e: T) => string,
+  toAnswers: (e: T) => { primary: string; secondary?: string }
+): Promise<QuizItem[]> {
+  const titles = entries.map(getWikiTitle);
+  const images = await fetchLeadImages(titles);
+  const items: QuizItem[] = [];
+  for (const entry of entries) {
+    const wikiTitle = getWikiTitle(entry);
+    const url = images.get(wikiTitle);
+    if (!url) continue;
+    const answers = toAnswers(entry);
+    items.push({
+      id: `${categoryId}:${wikiTitle}`,
+      category: categoryId,
+      imageUrl: url,
+      answers,
+      distractors: { primary: [], secondary: [] },
+      hint: answers.secondary,
+    });
+  }
+  return items;
+}
+
 /** Mapillary-backed "Geo-Roulette": street images per city bounding box. */
 async function buildGeoRoulette(target: number, lang: Language): Promise<QuizItem[]> {
   const cities = shuffleArray(CITIES);
@@ -151,8 +184,22 @@ function buildForCategory(cat: CategoryId, target: number, lang: Language): Prom
       }));
     case 'geo_roulette':
       return buildGeoRoulette(target, lang);
+    case 'bands':
+      return buildFromWikipedia(
+        BANDS, 'bands',
+        (e) => e.wikiTitle ?? e.name,
+        (e) => ({ primary: e.name, secondary: lang === 'de' ? e.genre.de : e.genre.en })
+      );
+    case 'movies':
+      return buildWikimedia(MOVIES, 'movies', target, (e) => ({ primary: e.title }));
+    case 'sport':
+      return buildFromWikipedia(
+        SPORTS, 'sport',
+        (e) => e.wikiTitle ?? e.name,
+        (e) => ({ primary: e.name, secondary: lang === 'de' ? e.country.de : e.country.en })
+      );
     default:
-      return Promise.resolve([]); // bands / movies / sport -> curated JSON (Step 8)
+      return Promise.resolve([]);
   }
 }
 
