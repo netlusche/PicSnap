@@ -41,6 +41,9 @@ export const translations = {
     totalScore: 'Total Score',
     nextPlayer: 'Next',
     answer: 'Answer',
+    winner: 'Winner!',
+    playedImages: 'Played images',
+    playedBy: 'Played by',
 
     // Per-step question prompts
     q_places_primary: 'What is it?',
@@ -116,6 +119,9 @@ export const translations = {
     totalScore: 'Punktestand',
     nextPlayer: 'Weiter',
     answer: 'Antwort',
+    winner: 'Gewinner!',
+    playedImages: 'Gespielte Bilder',
+    playedBy: 'Gespielt von',
 
     // Per-step question prompts
     q_places_primary: 'Was ist das?',

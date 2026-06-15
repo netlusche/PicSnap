@@ -6,6 +6,7 @@ import { CategoryScreen } from './components/CategoryScreen';
 import { PassDeviceScreen } from './components/PassDeviceScreen';
 import { QuizScreen } from './components/QuizScreen';
 import { TurnResultScreen } from './components/TurnResultScreen';
+import { FinalResultsScreen } from './components/FinalResultsScreen';
 import { translations } from './i18n/translations';
 import { CATEGORIES } from './data/categories';
 
@@ -50,6 +51,8 @@ const MainContent: React.FC = () => {
       return <QuizScreen />;
     case 'TURN_RESULT':
       return <TurnResultScreen />;
+    case 'FINAL_RESULTS':
+      return <FinalResultsScreen />;
     default:
       return <PlaceholderScreen />;
   }
@@ -72,7 +75,7 @@ const MainApp: React.FC = () => {
       <BackgroundEffects />
       <MainContent />
 
-      {state.phase !== 'SETUP' && (
+      {state.phase !== 'SETUP' && state.phase !== 'FINAL_RESULTS' && (
         <button onClick={() => dispatch({ type: 'RESET_GAME' })} className="start-over-btn">
           {t.startOver}
         </button>

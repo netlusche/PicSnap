@@ -1031,6 +1031,61 @@ body {
 .result-answer.ok { color: var(--success); }
 .result-answer.bad { color: var(--danger); }
 
+/* Final results: played-images history */
+.history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-height: 300px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.history-card {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem;
+  border-radius: 12px;
+  background: var(--card);
+  border: 1px solid var(--border);
+}
+
+.history-thumb {
+  width: 56px;
+  height: 56px;
+  border-radius: 8px;
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 1px solid var(--border);
+}
+
+.history-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+  flex: 1;
+  text-align: left;
+}
+
+.history-answers {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  flex-wrap: wrap;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--text);
+}
+.history-answers svg { vertical-align: middle; }
+.history-sep { color: var(--text-muted); margin: 0 0.1rem; }
+
+.history-meta {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
 /* ────────────────────────────────────────────────────────
    MODAL
    ──────────────────────────────────────────────────────── */

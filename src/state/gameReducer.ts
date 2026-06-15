@@ -9,6 +9,7 @@ export type GameAction =
   | { type: 'BEGIN_TURN'; payload: { item: QuizItem } }
   | { type: 'END_TURN'; payload: { points: number; primaryCorrect: boolean; secondaryCorrect?: boolean } }
   | { type: 'NEXT_TURN' }
+  | { type: 'PLAY_AGAIN' }
   | { type: 'RESET_GAME' };
 
 export const initialState: GameState = {
@@ -99,6 +100,20 @@ export const gameReducer = (state: GameState, action: GameAction): GameState => 
         turnPoints: 0,
       };
     }
+    case 'PLAY_AGAIN':
+      // "Start over" from the winner screen: keep players, reset their scores,
+      // and return to setup (step 1).
+      return {
+        ...state,
+        phase: 'SETUP',
+        currentPlayerIndex: 0,
+        currentRound: 1,
+        players: state.players.map((p) => ({ ...p, score: 0 })),
+        pool: [],
+        currentItem: null,
+        turnPoints: 0,
+        history: [],
+      };
     case 'RESET_GAME':
       // Keep the chosen theme + language; reset everything else.
       return { ...initialState, theme: state.theme, lang: state.lang };
