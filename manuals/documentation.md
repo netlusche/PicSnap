@@ -117,7 +117,7 @@ All game state lives in a single `GameState` managed by `useReducer`. The contex
 | `BEGIN_TURN` | Advance `currentPlayerIndex` |
 | `END_TURN` | Add points, push round to history |
 | `NEXT_TURN` | Advance `poolIndex`, transition to next player |
-| `TOGGLE_LIKE` | Add/remove a `RoundResult` from `likedItems` (toggled by `item.id`) |
+| `TOGGLE_LIKE` | Add/remove a `RoundResult` from `likedItems` (toggled by `item.id`); capped at 40 items — unlike always works, like is a no-op when the cap is reached |
 | `PLAY_AGAIN` | Keep players + `likedItems`, reset scores/history/pool |
 | `RESET_GAME` | Reset to setup, keep `theme`, `lang`, and `likedItems` |
 
@@ -391,7 +391,7 @@ Environment variables:
 
 **Commons categories vs. Wikipedia titles.** For Wikimedia-backed categories (places, history) the `category` field is a Commons category title. For people it is a Wikipedia article title. These are different namespaces and different APIs.
 
-**Liked images persist across resets.** `likedItems` is explicitly excluded from both `PLAY_AGAIN` and `RESET_GAME` resets. This lets a player collect favorites across multiple game sessions in the same browser tab. `localStorage` merge uses `{ ...initialState, ...(loaded) }` to ensure new state fields (like `likedItems`) are always present even when loading an older cached state.
+**Liked images persist across resets, capped at 40.** `likedItems` is explicitly excluded from both `PLAY_AGAIN` and `RESET_GAME` resets. `TOGGLE_LIKE` silently skips the add when the cap is reached; unlike always works regardless of count. This lets a player collect favorites across multiple game sessions in the same browser tab. `localStorage` merge uses `{ ...initialState, ...(loaded) }` to ensure new state fields (like `likedItems`) are always present even when loading an older cached state.
 
 **Category pre-selection enforcement.** `CategoryScreen` initialises with an empty selection (`useState<CategoryId[]>([])`). The Start Game button is `disabled` until at least one category is selected. This prevents accidentally starting a game with an empty pool.
 

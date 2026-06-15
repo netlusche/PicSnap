@@ -105,6 +105,7 @@ export const gameReducer = (state: GameState, action: GameAction): GameState => 
     case 'TOGGLE_LIKE': {
       const { result } = action.payload;
       const exists = state.likedItems.some((l) => l.item.id === result.item.id);
+      if (!exists && state.likedItems.length >= 40) return state;
       return {
         ...state,
         likedItems: exists
