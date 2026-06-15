@@ -186,9 +186,14 @@ export async function buildImagePool(
 
   const perCategory = await Promise.all(categories.map((cat) => buildForCategory(cat, target, lang)));
 
+  // Cap each category to its fair share before merging so no single category
+  // dominates the pool (e.g. Geo-Roulette returning 200 items vs. 30 from another).
+  const perCatQuota = Math.ceil(target / categories.length);
+  const capped = perCategory.map((items) => shuffleArray(items).slice(0, perCatQuota));
+
   // Deduplicate by imageUrl.
   const seen = new Set<string>();
-  let items = perCategory.flat().filter((i) => {
+  let items = capped.flat().filter((i) => {
     if (seen.has(i.imageUrl)) return false;
     seen.add(i.imageUrl);
     return true;
