@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { GameProvider, useGame } from './state/GameContext';
 import { BackgroundEffects } from './components/BackgroundEffects';
 import { SetupScreen } from './components/SetupScreen';
@@ -61,8 +61,13 @@ const MainContent: React.FC = () => {
 const MainApp: React.FC = () => {
   const { state, dispatch } = useGame();
   const t = translations[state.lang as keyof typeof translations] || translations.en;
+  const tr = t as Record<string, string>;
 
-  // Apply the active theme as a class on <body> (ported from MelodyMatch).
+  const [showCats, setShowCats] = useState(false);
+  const [showRestart, setShowRestart] = useState(false);
+
+  const inGame = ['PASS_DEVICE', 'QUIZ', 'TURN_RESULT'].includes(state.phase);
+
   React.useEffect(() => {
     document.body.className = '';
     document.body.classList.add(`theme-${state.theme || 'default'}`);
@@ -73,12 +78,70 @@ const MainApp: React.FC = () => {
       {/* Rendered outside any animated/transformed container so the position:fixed
           canvas stays anchored to the viewport (see BackgroundEffects). */}
       <BackgroundEffects />
-      <MainContent />
 
-      {state.phase !== 'SETUP' && state.phase !== 'FINAL_RESULTS' && (
-        <button onClick={() => dispatch({ type: 'RESET_GAME' })} className="start-over-btn">
-          {t.startOver}
-        </button>
+      <div style={inGame ? { flex: 1, display: 'flex', flexDirection: 'column', paddingBottom: '3.5rem' } : { flex: 1, display: 'flex', flexDirection: 'column' }}>
+        <MainContent />
+      </div>
+
+      {inGame && (
+        <div className="game-footer">
+          <button className="game-footer-btn" onClick={() => setShowCats(true)}>
+            {t.selectedCategories}
+          </button>
+          <button className="game-footer-btn" onClick={() => setShowRestart(true)}>
+            {t.startOver}
+          </button>
+        </div>
+      )}
+
+      {showCats && (
+        <div className="modal-overlay" onClick={() => setShowCats(false)}>
+          <div className="modal-card" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2 className="modal-title">{t.selectedCategories}</h2>
+              <button className="modal-close" onClick={() => setShowCats(false)}>✕</button>
+            </div>
+            <div className="modal-body">
+              <div className="chips-grid">
+                {state.categories.map((id) => {
+                  const cat = CATEGORIES.find((c) => c.id === id);
+                  if (!cat) return null;
+                  return (
+                    <span key={id} className="category-chip">
+                      {cat.emoji} {tr[cat.nameKey]}
+                    </span>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showRestart && (
+        <div className="modal-overlay">
+          <div className="modal-card modal-card--warning">
+            <div className="modal-body modal-body--center">
+              <h2 className="modal-warning-title">{t.restartTitle}</h2>
+              <p className="modal-warning-body">{t.restartBody}</p>
+              <div className="modal-actions">
+                <button
+                  className="option-button outline flex-1"
+                  onClick={() => setShowRestart(false)}
+                >
+                  {t.cancel}
+                </button>
+                <button
+                  className="option-button flex-1"
+                  style={{ background: 'var(--card-hover)', borderColor: 'var(--border-hover)' }}
+                  onClick={() => { dispatch({ type: 'RESET_GAME' }); setShowRestart(false); }}
+                >
+                  {t.yesRestart}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
       )}
     </>
   );

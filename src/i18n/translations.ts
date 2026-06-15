@@ -29,6 +29,11 @@ export const translations = {
     startOver: 'Start over',
     comingSoon: 'Game loop coming in the next step.',
     roundLabel: 'Round',
+    selectedCategories: 'Selected categories',
+    restartTitle: 'Do you really want to restart?',
+    restartBody: 'Your current progress will be lost.',
+    cancel: 'Cancel',
+    yesRestart: 'Yes, restart',
 
     // Game loop
     passTo: 'Pass the device to',
@@ -107,6 +112,11 @@ export const translations = {
     startOver: 'Neu starten',
     comingSoon: 'Die Spielschleife folgt im nächsten Schritt.',
     roundLabel: 'Runde',
+    selectedCategories: 'Aktive Kategorien',
+    restartTitle: 'Wirklich neu starten?',
+    restartBody: 'Dein Fortschritt geht verloren.',
+    cancel: 'Abbrechen',
+    yesRestart: 'Ja, neu starten',
 
     // Game loop
     passTo: 'Gerät weitergeben an',

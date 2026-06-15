@@ -1119,43 +1119,146 @@ body {
 }
 
 /* ────────────────────────────────────────────────────────
-   FIXED CORNER ACTION BUTTON (Start over, etc.)
+   GAME FOOTER BAR
    ──────────────────────────────────────────────────────── */
 
-.start-over-btn {
+.game-footer {
   position: fixed;
-  bottom: 1rem;
-  right: 1rem;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 500px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.6rem 1rem;
+  z-index: 100;
+}
+
+.game-footer-btn {
   background: var(--card);
   border: 1px solid var(--border);
   color: var(--text-muted);
   font-size: 0.75rem;
-  text-decoration: none;
+  font-family: inherit;
+  font-weight: 600;
   cursor: pointer;
-  padding: 0.4rem 0.8rem;
-  border-radius: 12px;
-  z-index: 100;
+  padding: 0.4rem 0.85rem;
+  border-radius: 999px;
   transition: all 0.2s ease;
+  line-height: 1.4;
 }
 
-.start-over-btn:hover {
+.game-footer-btn:hover {
   background: var(--card-hover);
   border-color: var(--border-hover);
   color: var(--text);
 }
 
 @media (min-width: 768px) {
-  .start-over-btn {
-    right: max(1.5rem, calc(50% - 380px));
-    bottom: 1.5rem;
-    font-size: 0.9rem;
-    padding: 0.6rem 1.2rem;
-    border-radius: 14px;
+  .game-footer-btn {
+    font-size: 0.875rem;
+    padding: 0.5rem 1.1rem;
   }
-  .start-over-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
-  }
+}
+
+/* ────────────────────────────────────────────────────────
+   MODAL INNER ELEMENTS
+   ──────────────────────────────────────────────────────── */
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 1.25rem 0;
+}
+
+.modal-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text);
+  margin: 0;
+}
+
+.modal-close {
+  background: var(--card-hover);
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  flex-shrink: 0;
+  transition: all 0.15s ease;
+  font-family: inherit;
+}
+
+.modal-close:hover {
+  background: var(--border);
+  color: var(--text);
+}
+
+.modal-body {
+  padding: 1rem 1.25rem 1.25rem;
+}
+
+.modal-body--center {
+  padding: 1.5rem 1.25rem;
+  text-align: center;
+}
+
+.chips-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.category-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  background: var(--badge-bg);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 0.35rem 0.8rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+/* ────────────────────────────────────────────────────────
+   RESTART WARNING OVERLAY
+   ──────────────────────────────────────────────────────── */
+
+.modal-card--warning {
+  border: 2px dashed var(--danger);
+}
+
+.modal-warning-title {
+  color: var(--danger);
+  font-size: 1.25rem;
+  font-weight: 800;
+  margin: 0 0 0.5rem;
+}
+
+.modal-warning-body {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  margin: 0 0 1.5rem;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.flex-1 {
+  flex: 1;
 }
 
 /* ────────────────────────────────────────────────────────
