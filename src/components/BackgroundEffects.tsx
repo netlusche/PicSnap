@@ -30,7 +30,8 @@ export const BackgroundEffects: React.FC = () => {
 
     // --- ANIMATION TYPES & SETUP ---
 
-    // 1. Default / Neon Party: Drifting neon bubbles/orbs
+    // 1a. Default (PicSnap): Drifting blue/orange orbs
+    // 1b. Neon Party: Drifting purple/pink orbs
     interface Orb {
       x: number;
       y: number;
@@ -40,24 +41,30 @@ export const BackgroundEffects: React.FC = () => {
       color: string;
     }
     const orbs: Orb[] = [];
-    const colors = [
+    const picSnapColors = [
+      'rgba(37, 137, 245, 0.1)',
+      'rgba(37, 137, 245, 0.07)',
+      'rgba(247, 127, 0, 0.08)',
+      'rgba(247, 127, 0, 0.05)',
+    ];
+    const neonColors = [
       'rgba(139, 92, 246, 0.08)',
       'rgba(236, 72, 153, 0.08)',
       'rgba(16, 185, 129, 0.06)',
       'rgba(6, 182, 212, 0.06)'
     ];
-    const initOrbs = () => {
+    const initOrbs = (colorSet: string[]) => {
       orbs.length = 0;
       const count = Math.min(15, Math.floor(cv.width / 70));
       for (let i = 0; i < count; i++) {
-        const idx = Math.floor(Math.random() * colors.length);
+        const idx = Math.floor(Math.random() * colorSet.length);
         orbs.push({
           x: Math.random() * cv.width,
           y: Math.random() * cv.height,
           vx: (Math.random() - 0.5) * 0.4,
           vy: (Math.random() - 0.5) * 0.4,
           r: 40 + Math.random() * 70,
-          color: colors[idx]
+          color: colorSet[idx]
         });
       }
     };
@@ -329,7 +336,8 @@ export const BackgroundEffects: React.FC = () => {
       cv.width = window.innerWidth;
       cv.height = window.innerHeight;
 
-      if (theme === 'default') initOrbs();
+      if (theme === 'default') initOrbs(picSnapColors);
+      else if (theme === 'neon_party') initOrbs(neonColors);
       else if (theme === 'matrix') initMatrixLines();
       else if (theme === 'westeros') initEmbers();
       else if (theme === 'sakura') initPetals();
@@ -356,12 +364,12 @@ export const BackgroundEffects: React.FC = () => {
       }
 
       switch (theme) {
-        case 'default': {
+        case 'default':
+        case 'neon_party': {
           orbs.forEach(orb => {
             orb.x += orb.vx;
             orb.y += orb.vy;
 
-            // Bounce
             if (orb.x - orb.r < 0 || orb.x + orb.r > cv.width) orb.vx *= -1;
             if (orb.y - orb.r < 0 || orb.y + orb.r > cv.height) orb.vy *= -1;
 

@@ -5,7 +5,7 @@ import { Users, Settings, Globe, ChevronRight, UserPlus, Trash2, Heart, ChevronD
 import { translations } from '../i18n/translations';
 
 const THEMES: { id: Theme; label: string }[] = [
-  { id: 'default', label: 'Neon Party' },
+  { id: 'default', label: 'Default' },
   { id: 'plain_white', label: 'Plain White' },
   { id: 'plain_dark', label: 'Plain Dark' },
   { id: 'matrix', label: 'Matrix' },
@@ -19,6 +19,7 @@ const THEMES: { id: Theme; label: string }[] = [
   { id: 'post_punk', label: 'Post Punk' },
   { id: 'rock_legends', label: 'Rock Legends' },
   { id: 'kraftwerk', label: 'Kraftwerk' },
+  { id: 'neon_party', label: 'Neon Party' },
 ];
 
 const MAX_PLAYERS = 6;

@@ -15,7 +15,8 @@ export type Theme =
   | 'heavy_metal'
   | 'post_punk'
   | 'rock_legends'
-  | 'kraftwerk';
+  | 'kraftwerk'
+  | 'neon_party';
 
 // Quiz categories. Each maps to one or more image sources (Wikimedia / Mapillary / curated JSON).
 export type CategoryId =
