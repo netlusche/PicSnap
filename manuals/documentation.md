@@ -224,7 +224,7 @@ const NON_PHOTO = /\b(map|karte|diagram|plan|grundriss|chart|graph|logo|wappen|
 
 ### Per-Category Distractors
 
-Distractors (wrong answers shown alongside the correct one) are drawn only from answers within the **same category**. A places image never shows a person's name as a wrong answer. `withDistractors()` builds per-category answer pools and attaches 3 distractors per question.
+Distractors (wrong answers shown alongside the correct one) are drawn only from answers within the **same category**. A places image never shows a person's name as a wrong answer. `withDistractors()` is called on the **full per-category fetch queue** (up to `poolTargetSize` items) — not on the tiny round-ordered game pool — so distractor pools remain rich even when a category contributes only one item per round. After distractors are attached to all fetched items, the ordered game pool is assembled by picking from those enriched items, so no second `withDistractors()` pass is needed.
 
 ### QuizItem Interface
 
@@ -405,7 +405,7 @@ Environment variables:
 
 **Category pre-selection enforcement.** `CategoryScreen` initialises with an empty selection (`useState<CategoryId[]>([])`). The Start Game button is `disabled` until at least one category is selected. This prevents accidentally starting a game with an empty pool.
 
-**Round-based category assignment.** The pool is structured so all `players` items in a given round belong to the same category. Categories are shuffled into a cycle before pool assembly, ensuring even distribution across rounds. This prevents a single category from dominating back-to-back turns (e.g. 5 consecutive Geo-Roulette rounds when all categories are selected).
+**Round-based category assignment.** The pool is structured so all `players` items in a given round belong to the same category. Categories are shuffled into a cycle before pool assembly, ensuring even distribution across rounds. This prevents a single category from dominating back-to-back turns (e.g. 5 consecutive Geo-Roulette rounds when all categories are selected). The game pool itself is only `rounds × players` items; distractors are pre-built from the full per-category fetch queues and then carried into the game pool via an id-lookup map, so multiple-choice always has ≥3 wrong answers available.
 
 **PicSnap Default theme.** The `default` theme uses the app logo palette: deep navy background (`#060d1e`), electric blue primary (`#2589f5`), orange secondary (`#f77f00`). The title gradient and primary button gradient derive from `--primary`/`--secondary` CSS variables automatically. The original Neon Party (purple/pink) is now a separate `neon_party` theme entry at the bottom of the list.
 

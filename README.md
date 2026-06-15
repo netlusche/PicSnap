@@ -60,4 +60,4 @@ npm run preview
 
 ## Status
 
-All features complete and playable. v0.2.5.
+All features complete and playable. v0.2.6.
