@@ -180,7 +180,19 @@ interface City {
 }
 ```
 
-12 cities currently configured: Paris, New York, Tokyo, London, Berlin, Sydney, Barcelona, Rome, Amsterdam, Cape Town, Buenos Aires, Mumbai.
+85 cities configured across all continents — Europe (30), Asia (19), Americas (18), Africa (8), Middle East (5), Oceania (5). Each bbox is ~0.003° × 0.003° (~300 m) centred on a well-covered area.
+
+### Bbox Retry Logic
+
+If the API responds with error code `1` ("Please reduce the amount of data"), `shrinkBbox()` halves the bbox dimensions while keeping the same centre and retries. Up to 3 retry attempts per city. This handles unusually dense areas without requiring per-city manual tuning.
+
+```ts
+const shrinkBbox = ([minLng, minLat, maxLng, maxLat]) => {
+  const cx = (minLng + maxLng) / 2, cy = (minLat + maxLat) / 2;
+  const hw = (maxLng - minLng) / 4, hh = (maxLat - minLat) / 4;
+  return [cx - hw, cy - hh, cx + hw, cy + hh];
+};
+```
 
 ### Response Shape (simplified)
 
@@ -198,7 +210,7 @@ interface City {
 
 ### Caching
 
-Mapillary results are **not cached** (street imagery changes frequently and token-based requests shouldn't be stored in plaintext localStorage).
+Mapillary results are cached per bbox+maxImages key (`mapillary:{bbox}:{maxImages}`) with a 24 h TTL in the two-tier cache (memory + localStorage). The cache key includes `maxImages` so different pool-size requests are stored separately.
 
 ---
 

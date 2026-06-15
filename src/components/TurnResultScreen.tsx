@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useGame } from '../state/GameContext';
 import { translations } from '../i18n/translations';
-import { CheckCircle, XCircle, ChevronRight } from 'lucide-react';
+import { CheckCircle, XCircle, ChevronRight, Heart } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { getThemeConfettiColors } from '../utils/confettiColors';
 import { ImageReveal } from './ImageReveal';
@@ -47,8 +47,15 @@ export const TurnResultScreen: React.FC = () => {
         <span className="score-label">{t.points}</span>
       </div>
 
-      <div style={{ width: '100%', maxWidth: '320px', marginTop: '0.5rem' }}>
+      <div style={{ position: 'relative', width: '100%', maxWidth: '320px', marginTop: '0.5rem' }}>
         <ImageReveal src={last.item.imageUrl} animate={false} />
+        <button
+          className={`like-btn${state.likedItems.some((l) => l.item.id === last.item.id) ? ' liked' : ''}`}
+          onClick={() => dispatch({ type: 'TOGGLE_LIKE', payload: { result: last } })}
+          aria-label="Like"
+        >
+          <Heart size={18} fill={state.likedItems.some((l) => l.item.id === last.item.id) ? 'currentColor' : 'none'} />
+        </button>
       </div>
 
       <div className="result-answers">

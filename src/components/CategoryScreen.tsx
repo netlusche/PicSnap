@@ -10,9 +10,7 @@ export const CategoryScreen: React.FC = () => {
   const { state, dispatch } = useGame();
   const t = translations[state.lang as keyof typeof translations] || translations.en;
 
-  const [selected, setSelected] = useState<CategoryId[]>(
-    state.categories.length > 0 ? state.categories : []
-  );
+  const [selected, setSelected] = useState<CategoryId[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   // 'empty'  -> no category selected; 'pool' -> not enough images fetched
   const [notice, setNotice] = useState<null | 'empty' | 'pool'>(null);
@@ -99,7 +97,7 @@ export const CategoryScreen: React.FC = () => {
       <button
         className={`option-button primary large mt-4 ${selected.length === 0 || isLoading ? 'visually-disabled' : ''}`}
         onClick={handleStart}
-        disabled={isLoading}
+        disabled={selected.length === 0 || isLoading}
       >
         {isLoading ? (
           <>

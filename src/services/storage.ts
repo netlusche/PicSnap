@@ -1,4 +1,5 @@
 import { GameState } from '../types';
+import { initialState } from '../state/gameReducer';
 
 const KEY = 'picsnap_state';
 
@@ -13,7 +14,10 @@ export const saveGameState = (state: GameState) => {
 export const loadGameState = (): GameState | null => {
   try {
     const s = localStorage.getItem(KEY);
-    return s ? (JSON.parse(s) as GameState) : null;
+    if (!s) return null;
+    // Merge with initialState so any new fields added since the last save
+    // always get a valid default value instead of being undefined.
+    return { ...initialState, ...(JSON.parse(s) as Partial<GameState>) };
   } catch {
     return null;
   }

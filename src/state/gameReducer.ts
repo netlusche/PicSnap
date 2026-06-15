@@ -1,4 +1,4 @@
-import { GameState, Language, Theme, Player, CategoryId, QuizItem, GamePhase } from '../types';
+import { GameState, Language, Theme, Player, CategoryId, QuizItem, GamePhase, RoundResult } from '../types';
 
 export type GameAction =
   | { type: 'SET_THEME'; payload: { theme: Theme } }
@@ -9,6 +9,7 @@ export type GameAction =
   | { type: 'BEGIN_TURN'; payload: { item: QuizItem } }
   | { type: 'END_TURN'; payload: { points: number; primaryCorrect: boolean; secondaryCorrect?: boolean } }
   | { type: 'NEXT_TURN' }
+  | { type: 'TOGGLE_LIKE'; payload: { result: RoundResult } }
   | { type: 'PLAY_AGAIN' }
   | { type: 'RESET_GAME' };
 
@@ -25,6 +26,7 @@ export const initialState: GameState = {
   currentItem: null,
   turnPoints: 0,
   history: [],
+  likedItems: [],
 };
 
 export const gameReducer = (state: GameState, action: GameAction): GameState => {
@@ -100,9 +102,17 @@ export const gameReducer = (state: GameState, action: GameAction): GameState => 
         turnPoints: 0,
       };
     }
+    case 'TOGGLE_LIKE': {
+      const { result } = action.payload;
+      const exists = state.likedItems.some((l) => l.item.id === result.item.id);
+      return {
+        ...state,
+        likedItems: exists
+          ? state.likedItems.filter((l) => l.item.id !== result.item.id)
+          : [...state.likedItems, result],
+      };
+    }
     case 'PLAY_AGAIN':
-      // "Start over" from the winner screen: keep players, reset their scores,
-      // and return to setup (step 1).
       return {
         ...state,
         phase: 'SETUP',
@@ -113,10 +123,11 @@ export const gameReducer = (state: GameState, action: GameAction): GameState => 
         currentItem: null,
         turnPoints: 0,
         history: [],
+        // likedItems intentionally kept — persist across games
       };
     case 'RESET_GAME':
-      // Keep the chosen theme + language; reset everything else.
-      return { ...initialState, theme: state.theme, lang: state.lang };
+      // Keep theme, language and liked images; reset everything else.
+      return { ...initialState, theme: state.theme, lang: state.lang, likedItems: state.likedItems };
     default:
       return state;
   }

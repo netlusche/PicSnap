@@ -1,13 +1,15 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useGame } from '../state/GameContext';
 import { translations } from '../i18n/translations';
-import { Trophy, Medal, RotateCcw, CheckCircle, XCircle, Images } from 'lucide-react';
+import { Trophy, Medal, RotateCcw, CheckCircle, XCircle, Images, ZoomIn, Heart } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { getThemeConfettiColors } from '../utils/confettiColors';
 
 export const FinalResultsScreen: React.FC = () => {
   const { state, dispatch } = useGame();
   const t = translations[state.lang as keyof typeof translations] || translations.en;
+
+  const [lightboxUrl, setLightboxUrl] = useState<string | null>(null);
 
   const sortedPlayers = [...state.players].sort((a, b) => b.score - a.score);
   const winner = sortedPlayers[0];
@@ -54,7 +56,10 @@ export const FinalResultsScreen: React.FC = () => {
           <div className="history-list">
             {state.history.map((h, i) => (
               <div key={`${h.item.id}-${i}`} className="history-card">
-                <img src={h.item.imageUrl} alt="" className="history-thumb" draggable={false} />
+                <div className="history-thumb-wrap" onClick={() => setLightboxUrl(h.item.imageUrl)}>
+                  <img src={h.item.imageUrl} alt="" className="history-thumb" draggable={false} />
+                  <span className="history-thumb-zoom"><ZoomIn size={12} /></span>
+                </div>
                 <div className="history-info">
                   <span className="history-answers">
                     <span className={h.primaryCorrect ? 'text-success' : 'text-danger'}>
@@ -75,6 +80,14 @@ export const FinalResultsScreen: React.FC = () => {
                     {t.playedBy} {h.player} · <strong className="text-gold">+{h.points}</strong>
                   </span>
                 </div>
+                <button
+                  className={`like-btn${state.likedItems.some((l) => l.item.id === h.item.id) ? ' liked' : ''}`}
+                  style={{ position: 'static', background: 'transparent', flexShrink: 0 }}
+                  onClick={() => dispatch({ type: 'TOGGLE_LIKE', payload: { result: h } })}
+                  aria-label="Like"
+                >
+                  <Heart size={16} fill={state.likedItems.some((l) => l.item.id === h.item.id) ? 'currentColor' : 'none'} />
+                </button>
               </div>
             ))}
           </div>
@@ -87,6 +100,15 @@ export const FinalResultsScreen: React.FC = () => {
           <span>{t.startOver}</span>
         </button>
       </div>
+
+      {lightboxUrl && (
+        <div className="lightbox-overlay" onClick={() => setLightboxUrl(null)}>
+          <div className="lightbox-inner">
+            <button className="lightbox-close" onClick={(e) => { e.stopPropagation(); setLightboxUrl(null); }} aria-label="Close">✕</button>
+            <img src={lightboxUrl} alt="" className="lightbox-img" draggable={false} />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

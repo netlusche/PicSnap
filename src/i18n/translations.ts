@@ -51,6 +51,8 @@ export const translations = {
     winner: 'Winner!',
     playedImages: 'Played images',
     playedBy: 'Played by',
+    likedImages: 'Liked ❤️',
+    noLikedImages: 'No liked images yet. Tap ❤️ on the result screen to save them!',
 
     // Per-step question prompts
     q_places_primary: 'What is it?',
@@ -136,6 +138,8 @@ export const translations = {
     winner: 'Gewinner!',
     playedImages: 'Gespielte Bilder',
     playedBy: 'Gespielt von',
+    likedImages: 'Gemerkt ❤️',
+    noLikedImages: 'Noch keine gemerkten Bilder. Tippe ❤️ auf dem Ergebnis-Screen!',
 
     // Per-step question prompts
     q_places_primary: 'Was ist das?',

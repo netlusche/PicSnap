@@ -6,7 +6,7 @@ the more points. Built as a client-only React + Vite + TypeScript PWA.
 
 > Architecture is modeled on the MelodyMatch music quiz, but PicSnap is a fresh,
 > standalone project — images instead of audio, with its own categories and image
-> sources (Wikimedia Commons, Mapillary, and a curated JSON database).
+> sources (Wikimedia Commons, Wikipedia, and Mapillary).
 
 ## Stack
 
@@ -46,9 +46,16 @@ npm run preview
 | Movies | 86 | Wikimedia Commons |
 | Bands & Musicians | 79 | Wikimedia Commons |
 | Sport | 68 | Wikimedia Commons |
-| Geo-Roulette | — | Mapillary *(requires token)* |
+| Geo-Roulette | 85 cities across all continents | Mapillary *(requires token)* |
+
+## Features
+
+- **Liked Images** — heart-button on the result screen saves images; persists across games; collapsible list on the start screen with lightbox zoom
+- **Lightbox** — tap any played or liked image thumbnail to view full-size with a ✕ close button
+- **Category enforcement** — no category pre-selected; Start Game is disabled until at least one is chosen
+- **14 visual themes** with matching canvas background animations
+- **EN / DE** localization
 
 ## Status
 
-Core game loop complete and playable. All categories implemented and verified.
-Pending: PWA polish (Step 9), localization audit (Step 10), Geo-Roulette Mapillary token setup.
+All features complete and playable. v0.2.0.

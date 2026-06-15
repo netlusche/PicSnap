@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useGame } from '../state/GameContext';
 import { Player, Language, Theme } from '../types';
-import { Users, Settings, Globe, ChevronRight, UserPlus, Trash2 } from 'lucide-react';
+import { Users, Settings, Globe, ChevronRight, UserPlus, Trash2, Heart, ChevronDown, ChevronUp, ZoomIn, Image, BookOpen, MapPin } from 'lucide-react';
 import { translations } from '../i18n/translations';
 
 const THEMES: { id: Theme; label: string }[] = [
@@ -27,6 +27,8 @@ export const SetupScreen: React.FC = () => {
   const { state, dispatch } = useGame();
   const [lang, setLang] = useState<Language>(state.lang);
   const [rounds, setRounds] = useState<number>(state.totalRounds || 10);
+  const [likedOpen, setLikedOpen] = useState(false);
+  const [lightboxUrl, setLightboxUrl] = useState<string | null>(null);
   const [players, setPlayers] = useState<Player[]>(
     state.players.length > 0 ? state.players : [{ id: '1', name: 'Player 1', score: 0 }]
   );
@@ -121,10 +123,67 @@ export const SetupScreen: React.FC = () => {
         </div>
       </div>
 
+      <div className="setup-section">
+        <button className="liked-section-toggle" onClick={() => setLikedOpen((o) => !o)}>
+          <span className="liked-section-toggle-label">
+            <Heart size={16} fill="currentColor" style={{ color: 'var(--danger)' }} />
+            {t.likedImages}
+          </span>
+          {likedOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+        </button>
+        {likedOpen && (
+          <div className="liked-section-body">
+            {state.likedItems.length === 0 ? (
+              <p className="liked-empty">{t.noLikedImages}</p>
+            ) : (
+              <div className="liked-list">
+                {state.likedItems.map((h, i) => (
+                  <div key={`liked-setup-${h.item.id}-${i}`} className="liked-row">
+                    <div className="history-thumb-wrap" onClick={() => setLightboxUrl(h.item.imageUrl)}>
+                      <img src={h.item.imageUrl} alt="" className="history-thumb liked-thumb" draggable={false} />
+                      <span className="history-thumb-zoom"><ZoomIn size={12} /></span>
+                    </div>
+                    <span className="liked-name">{h.item.answers.primary}</span>
+                    <button
+                      className="like-btn liked"
+                      style={{ position: 'static', background: 'transparent', width: 32, height: 32 }}
+                      onClick={() => dispatch({ type: 'TOGGLE_LIKE', payload: { result: h } })}
+                      aria-label="Unlike"
+                    >
+                      <Heart size={16} fill="currentColor" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+
       <button className="option-button primary large mt-4 group" onClick={handleNext}>
         <span>{t.next}</span>
         <ChevronRight size={24} className="group-hover-translate icon" />
       </button>
+
+      {lightboxUrl && (
+        <div className="lightbox-overlay" onClick={() => setLightboxUrl(null)}>
+          <div className="lightbox-inner">
+            <button className="lightbox-close" onClick={(e) => { e.stopPropagation(); setLightboxUrl(null); }} aria-label="Close">✕</button>
+            <img src={lightboxUrl} alt="" className="lightbox-img" draggable={false} />
+          </div>
+        </div>
+      )}
+
+      <footer className="app-footer">
+        <span className="app-footer-apis">
+          <Image size={13} />&thinsp;Wikimedia Commons API
+          <span className="app-footer-sep">,</span>
+          <BookOpen size={13} />&thinsp;Wikipedia API
+          <span className="app-footer-sep">&amp;</span>
+          <MapPin size={13} />&thinsp;Mapillary API
+        </span>
+        <span className="app-footer-meta">Non-commercial hobby project · v{__APP_VERSION__}</span>
+      </footer>
     </div>
   );
 };

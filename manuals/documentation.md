@@ -23,7 +23,7 @@
 
 PicSnap is a **local, pass-the-device multiplayer picture quiz**. One device is shared between 2–6 players. The active player sees an image and taps the correct answer as fast as possible — speed determines points. No account, no backend, no server required.
 
-The app is a pure **static single-page application**: all data comes from public APIs called directly from the browser (Wikimedia Commons, Wikipedia, Mapillary), or from the bundled curated JSON database for categories like Bands, Movies, and Sport.
+The app is a pure **static single-page application**: all data comes from public APIs called directly from the browser (Wikimedia Commons, Wikipedia, Mapillary). All category entries are curated TypeScript arrays bundled with the app; no external database is required.
 
 Architecture is modeled on **MelodyMatch** (music quiz), but PicSnap is a fully independent project with its own category system, image-fetching pipeline, and quiz UX.
 
@@ -47,7 +47,7 @@ Architecture is modeled on **MelodyMatch** (music quiz), but PicSnap is a fully 
 
 ```
 src/
-├── App.tsx                    # Root component, phase router
+├── App.tsx                    # Root component, phase router, game footer + in-game overlays
 ├── main.tsx                   # React entry point
 ├── styles.css                 # Global styles, 16 themes, animations
 ├── vite-env.d.ts              # TypeScript: VITE_MAPILLARY_TOKEN
@@ -70,7 +70,7 @@ src/
 │   ├── bands.ts                # 79 band/musician entries
 │   ├── movies.ts               # 86 film entries
 │   ├── sports.ts               # 68 athlete entries
-│   └── cities.ts               # 12 city bounding boxes for Geo-Roulette
+│   └── cities.ts               # 85 city bounding boxes for Geo-Roulette (all continents)
 ├── components/
 │   ├── SetupScreen.tsx
 │   ├── CategoryScreen.tsx      # Category picker + pool fetch + validation
@@ -99,7 +99,8 @@ All game state lives in a single `GameState` managed by `useReducer`. The contex
 | `currentPlayerIndex` | `number` | Index into `players` |
 | `pool` | `QuizItem[]` | Pre-fetched, shuffled image pool |
 | `poolIndex` | `number` | Pointer into the pool for the current turn |
-| `history` | `QuizItem[]` | Images already shown (for the final results screen) |
+| `history` | `RoundResult[]` | Rounds already played (for final results screen) |
+| `likedItems` | `RoundResult[]` | Images the player liked; persists across PLAY_AGAIN and RESET_GAME |
 | `lang` | `'en' \| 'de'` | UI + answer language |
 | `theme` | `ThemeId` | One of 16 visual themes |
 | `selectedCategories` | `CategoryId[]` | Categories chosen for this game |
@@ -114,10 +115,11 @@ All game state lives in a single `GameState` managed by `useReducer`. The contex
 | `SET_POOL` | Store fetched image pool, advance to game |
 | `START_GAME` | Transition to first turn |
 | `BEGIN_TURN` | Advance `currentPlayerIndex` |
-| `END_TURN` | Add points, push image to history |
+| `END_TURN` | Add points, push round to history |
 | `NEXT_TURN` | Advance `poolIndex`, transition to next player |
-| `PLAY_AGAIN` | Keep players, reset scores/history/pool |
-| `RESET_GAME` | Full reset to setup screen |
+| `TOGGLE_LIKE` | Add/remove a `RoundResult` from `likedItems` (toggled by `item.id`) |
+| `PLAY_AGAIN` | Keep players + `likedItems`, reset scores/history/pool |
+| `RESET_GAME` | Reset to setup, keep `theme`, `lang`, and `likedItems` |
 
 ### Persistence
 
@@ -267,7 +269,7 @@ Defines 7 categories: `places`, `geo_roulette`, `people`, `bands`, `movies`, `sp
 
 ### `src/data/cities.ts`
 
-12 city bounding boxes (`bbox: [minLng, minLat, maxLng, maxLat]`) for Mapillary Geo-Roulette queries.
+85 city bounding boxes (`bbox: [minLng, minLat, maxLng, maxLat]`) for Mapillary Geo-Roulette queries. Covers Europe (30), Asia (19), Americas (18), Africa (8), Middle East (5), Oceania (5). Each bbox is ~0.003° × 0.003° (~300 m) around a well-covered city center.
 
 ---
 
@@ -286,15 +288,16 @@ Wikipedia lead images are cached per article title (`wpimg:{title}`). Wikimedia 
 
 ## 9. Components
 
-| Component | Responsibility |
+| Component / module | Responsibility |
 |---|---|
-| `SetupScreen` | Player names, round count, theme/language picker |
-| `CategoryScreen` | Category selection checkboxes, triggers pool fetch, shows warning if pool too small |
-| `PassDeviceScreen` | Hand-off screen — shows active player name, blur until "Ready" tapped |
+| `SetupScreen` | Player names, round count, theme/language picker; collapsible "Liked ❤️" section with lightbox; app footer with API credits + version |
+| `CategoryScreen` | Category selection — none pre-selected, Start Game disabled until ≥1 chosen; triggers pool fetch; shows warning if pool too small |
+| `PassDeviceScreen` | Hand-off screen — shows active player name, blurred until "Begin Turn" tapped |
 | `QuizScreen` | 3-2-1 countdown → image display → primary question → secondary question; dispatches `END_TURN` with score |
-| `TurnResultScreen` | Shows correct answer, points earned, updated leaderboard |
-| `FinalResultsScreen` | Trophy, winner, leaderboard, played-image history, cannon confetti |
+| `TurnResultScreen` | Shows correct answer, points earned, updated leaderboard; like-button (❤️) on the revealed image |
+| `FinalResultsScreen` | Trophy, winner, leaderboard, played-image history with like-buttons and lightbox zoom; cannon confetti |
 | `BackgroundEffects` | 14 canvas animations; rendered **outside** any CSS-transformed ancestor to keep `position:fixed` anchored correctly |
+| `App.tsx` (`MainApp`) | Game footer bar (3 pill buttons: Selected categories, Score, Start over) + three modal overlays. Visible only during PASS_DEVICE / QUIZ / TURN_RESULT phases. |
 
 ### BackgroundEffects Placement
 
@@ -384,4 +387,14 @@ Environment variables:
 
 **Mapillary token optional.** If `VITE_MAPILLARY_TOKEN` is absent, `fetchBboxImages()` returns `[]` immediately. The pool validation step warns the player if the Geo-Roulette pool is empty so they can deselect it.
 
+**Mapillary bbox retry.** If the API returns error code 1 ("data too large"), `shrinkBbox()` halves the bounding box dimensions (keeping the center) and retries — up to 3 times. This handles dense city centers without hard-coding smaller boxes.
+
 **Commons categories vs. Wikipedia titles.** For Wikimedia-backed categories (places, history) the `category` field is a Commons category title. For people it is a Wikipedia article title. These are different namespaces and different APIs.
+
+**Liked images persist across resets.** `likedItems` is explicitly excluded from both `PLAY_AGAIN` and `RESET_GAME` resets. This lets a player collect favorites across multiple game sessions in the same browser tab. `localStorage` merge uses `{ ...initialState, ...(loaded) }` to ensure new state fields (like `likedItems`) are always present even when loading an older cached state.
+
+**Category pre-selection enforcement.** `CategoryScreen` initialises with an empty selection (`useState<CategoryId[]>([])`). The Start Game button is `disabled` until at least one category is selected. This prevents accidentally starting a game with an empty pool.
+
+**App footer — version injection.** `vite.config.ts` exposes `__APP_VERSION__` via Vite's `define` (sourced from `process.env.npm_package_version`, set automatically by npm). The `SetupScreen` footer renders this at build time — no runtime fetch needed.
+
+**Game footer — fixed bar + paddingBottom wrapper.** During active play (PASS_DEVICE / QUIZ / TURN_RESULT), `MainApp` renders a `position:fixed` pill-button bar at the bottom of the screen. To prevent the bar from overlapping page content, `<MainContent />` is wrapped in a div with `paddingBottom: '3.5rem'` whenever `inGame` is true. The three buttons open modal overlays: "Selected categories" (chip list of active categories), "Score" (live leaderboard), "Start over" (warning dialog with `RESET_GAME` dispatch). The restart warning overlay does not close on backdrop click to prevent accidental resets.

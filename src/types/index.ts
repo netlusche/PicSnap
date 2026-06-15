@@ -82,4 +82,5 @@ export interface GameState {
   currentItem: QuizItem | null;
   turnPoints: number;
   history: RoundResult[];
+  likedItems: RoundResult[];
 }
