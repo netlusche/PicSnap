@@ -2,7 +2,6 @@
 // Uses Wikimedia Commons categories (film stills, production photos) rather
 // than Wikipedia lead images, which are mostly non-free for modern films.
 // `category` is the Wikimedia Commons category (without "Category:" prefix).
-// Category names were verified against the Commons API to have direct JPEG/PNG files.
 
 export interface MovieEntry {
   title: string;
@@ -20,11 +19,19 @@ export const MOVIES: MovieEntry[] = [
   { title: 'The Birth of a Nation',            category: 'The Birth of a Nation (film)' },
   { title: 'Intolerance',                      category: 'Intolerance (film)' },
 
+  // ── Disney Animation Classics (PD stills) ─────────────────────────────────
+  { title: 'Snow White and the Seven Dwarfs',  category: 'Snow White and the Seven Dwarfs (1937 film)' },
+  { title: 'Pinocchio',                        category: 'Pinocchio (1940 film)' },
+  { title: 'Fantasia',                         category: 'Fantasia (1940 film)' },
+  { title: 'Dumbo',                            category: 'Dumbo (film)' },
+  { title: 'Bambi',                            category: 'Bambi (film)' },
+  { title: 'Sleeping Beauty',                  category: 'Sleeping Beauty (1959 film)' },
+  { title: 'The Jungle Book',                  category: 'The Jungle Book (1967 film)' },
+
   // ── 1930s ──────────────────────────────────────────────────────────────────
   { title: 'Gone with the Wind',               category: 'Gone with the Wind (film)' },
   { title: 'The Wizard of Oz',                 category: 'The Wizard of Oz (1939 film)' },
   { title: 'King Kong',                        category: 'King Kong (1933 film)' },
-  { title: 'Snow White and the Seven Dwarfs',  category: 'Snow White and the Seven Dwarfs (1937 film)' },
   { title: 'Frankenstein',                     category: 'Frankenstein (1931 film)' },
   { title: 'Dracula',                          category: 'Dracula (1931 film)' },
   { title: 'The Adventures of Robin Hood',     category: 'The Adventures of Robin Hood' },
@@ -34,7 +41,6 @@ export const MOVIES: MovieEntry[] = [
   { title: 'Citizen Kane',                     category: 'Citizen Kane' },
   { title: 'The Maltese Falcon',               category: 'The Maltese Falcon (1941 film)' },
   { title: 'Double Indemnity',                 category: 'Double Indemnity (film)' },
-  { title: 'Rebecca',                          category: 'Rebecca (1940 film)' },
   { title: 'Bicycle Thieves',                  category: 'Ladri di biciclette' },
   { title: "It's a Wonderful Life",            category: "It's a Wonderful Life" },
   { title: 'The Third Man',                    category: 'The Third Man (film)' },
@@ -83,4 +89,27 @@ export const MOVIES: MovieEntry[] = [
   { title: 'Annie Hall',                       category: 'Annie Hall' },
   { title: 'Barry Lyndon',                     category: 'Barry Lyndon' },
   { title: 'Alien',                            category: 'Alien (film)' },
+
+  // ── 1980s ──────────────────────────────────────────────────────────────────
+  { title: 'The Empire Strikes Back',          category: 'The Empire Strikes Back (film)' },
+  { title: 'Raiders of the Lost Ark',          category: 'Raiders of the Lost Ark' },
+  { title: 'E.T. the Extra-Terrestrial',       category: 'E.T. the Extra-Terrestrial' },
+  { title: 'Blade Runner',                     category: 'Blade Runner' },
+  { title: 'Scarface',                         category: 'Scarface (1983 film)' },
+  { title: 'The Terminator',                   category: 'The Terminator' },
+  { title: 'Back to the Future',               category: 'Back to the Future' },
+  { title: 'Platoon',                          category: 'Platoon (film)' },
+  { title: 'Full Metal Jacket',                category: 'Full Metal Jacket' },
+  { title: 'Die Hard',                         category: 'Die Hard' },
+
+  // ── 1990s ──────────────────────────────────────────────────────────────────
+  { title: 'Goodfellas',                       category: 'Goodfellas' },
+  { title: 'The Silence of the Lambs',         category: 'The Silence of the Lambs (film)' },
+  { title: "Schindler's List",                 category: "Schindler's List" },
+  { title: 'Pulp Fiction',                     category: 'Pulp Fiction (film)' },
+  { title: 'Forrest Gump',                     category: 'Forrest Gump' },
+  { title: 'The Shawshank Redemption',         category: 'The Shawshank Redemption' },
+  { title: 'Fargo',                            category: 'Fargo (1996 film)' },
+  { title: 'Titanic',                          category: 'Titanic (1997 film)' },
+  { title: 'The Matrix',                       category: 'The Matrix (film)' },
 ];
