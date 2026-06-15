@@ -1,31 +1,15 @@
 # PicSnap — Feature Ideas & Roadmap
 
-## Current Roadmap (Steps 8–10)
+## Current Roadmap
 
 | Step | Description | Status |
 |---|---|---|
-| 8 | Curated JSON database: Bands, Movies, Sport (≥50 entries/category) | Pending |
+| 8 | Bands, Movies & Sport categories — Wikimedia Commons, curated TypeScript entry lists | ✅ Done |
 | 9 | PWA polish: icons, offline splash, install prompt | Pending |
 | 10 | Localization completeness: DE/EN audit, missing i18n keys | Pending |
+| — | Geo-Roulette: Mapillary API token setup | Pending (deferred) |
 
----
-
-## Planned: Step 8 — Curated JSON Database
-
-### Bands & Musicians
-- 50–80 entries covering rock, pop, hip-hop, electronic, classical, jazz
-- Answer: band name (primary) + genre or origin (secondary)
-- Images: Wikipedia lead images or well-known band photos from Commons
-
-### Film & Series
-- 50–80 entries: iconic films, classic posters, famous directors
-- Answer: film title (primary) + year or director (secondary)
-- Images: film stills or promotional images from Commons
-
-### Sport
-- 50–80 entries: famous athletes, legendary moments, iconic stadiums/events
-- Answer: athlete name or event (primary) + sport or country (secondary)
-- Images: action shots, portraits from Commons
+**Step 8 summary:** All three categories implemented using `buildWikimedia()` against curated Commons category lists — 79 bands, 86 films (silent era through 1990s), 68 athletes. Concert/action photos replace the earlier Wikipedia lead-image approach, giving much larger pools.
 
 ---
 

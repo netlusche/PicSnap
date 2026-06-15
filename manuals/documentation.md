@@ -64,11 +64,13 @@ src/
 │   └── cache.ts                # Two-tier cache (memory Map + localStorage, 24h TTL)
 ├── data/
 │   ├── categories.ts           # 7 category definitions (id, emoji, keys, source)
-│   ├── people.ts               # 202 famous-person entries
-│   ├── places.ts               # 200 landmark entries
-│   ├── historyItems.ts         # 80 historical-subject entries
-│   ├── cities.ts               # 12 city bounding boxes for Geo-Roulette
-│   └── picsnap_db.json         # Curated JSON for Bands, Movies, Sport (Step 8)
+│   ├── people.ts               # 239 famous-person entries
+│   ├── places.ts               # 199 landmark entries
+│   ├── historyItems.ts         # 108 historical-subject entries
+│   ├── bands.ts                # 79 band/musician entries
+│   ├── movies.ts               # 86 film entries
+│   ├── sports.ts               # 68 athlete entries
+│   └── cities.ts               # 12 city bounding boxes for Geo-Roulette
 ├── components/
 │   ├── SetupScreen.tsx
 │   ├── CategoryScreen.tsx      # Category picker + pool fetch + validation
@@ -192,9 +194,11 @@ The ×2 factor buffers for load failures, deduplication, and distractors. Minimu
 |---|---|---|
 | `places` | Wikimedia Commons | `buildWikimedia(PLACES, …)` |
 | `history` | Wikimedia Commons | `buildWikimedia(HISTORY, …)` |
+| `bands` | Wikimedia Commons | `buildWikimedia(BANDS, …)` |
+| `movies` | Wikimedia Commons | `buildWikimedia(MOVIES, …)` |
+| `sport` | Wikimedia Commons | `buildWikimedia(SPORTS, …)` |
 | `people` | Wikipedia pageimages API | `buildPeople(lang)` |
 | `geo_roulette` | Mapillary Graph API | `buildGeoRoulette(target, lang)` |
-| `bands`, `movies`, `sport` | Bundled JSON (`picsnap_db.json`) | `buildFromJson(cat)` *(Step 8)* |
 
 ### NON_PHOTO Filter
 
@@ -235,19 +239,31 @@ interface QuizItem {
 
 ### `src/data/people.ts`
 
-202 entries: `{ name, knownFor: { en, de } }`. `name` doubles as the Wikipedia article title for the lead-image fetch. Covers politicians, scientists, artists, musicians, actors/directors, writers/philosophers, athletes, explorers, business figures.
+239 entries: `{ name, knownFor: { en, de } }`. `name` doubles as the Wikipedia article title for the lead-image fetch. Covers politicians, scientists, artists, musicians, actors/directors, writers/philosophers, athletes, explorers, business figures.
 
 ### `src/data/places.ts`
 
-200 entries: `{ category, name, country: { en, de } }`. `category` is a Wikimedia Commons category title (without "Category:" prefix). Covers worldwide landmarks, natural wonders, UNESCO sites.
+199 entries: `{ category, name, country: { en, de } }`. `category` is a Wikimedia Commons category title (without "Category:" prefix). Covers worldwide landmarks, natural wonders, UNESCO sites.
 
 ### `src/data/historyItems.ts`
 
-80 entries: `{ category, name, era: { en, de } }`. `category` is a Wikimedia Commons category title. Covers prehistory, ancient Egypt, antiquity, Roman Empire, Middle Ages, early modern, 19th–20th century. Kept distinct from `places.ts` to avoid duplicate Commons categories.
+108 entries: `{ category, name, era: { en, de } }`. `category` is a Wikimedia Commons category title. Covers prehistory, ancient Egypt, antiquity (Greece, Rome, Near East), Middle Ages, early modern, 18th–20th century.
+
+### `src/data/bands.ts`
+
+79 entries: `{ name, category, genre: { en, de } }`. `category` is a Wikimedia Commons category title — band/artist categories contain concert photos, press shots, and live-performance images. Covers classic rock, metal, grunge, punk/new wave, electronic, pop, hip-hop, soul, jazz, and K-pop.
+
+### `src/data/movies.ts`
+
+86 entries: `{ title, category }`. `category` is a Wikimedia Commons category title. Covers silent era, Disney animation classics, and films from the 1930s through the 1990s.
+
+### `src/data/sports.ts`
+
+68 entries: `{ name, category, country: { en, de } }`. `category` is a Wikimedia Commons category title — athlete categories contain action shots, press photos, and award ceremonies. Covers football, basketball, tennis, athletics, boxing, swimming, gymnastics, Formula One, cycling, golf, and more.
 
 ### `src/data/categories.ts`
 
-Defines 7 categories: `places`, `geo_roulette`, `people`, `bands`, `movies`, `sport`, `history`. Each has `id`, `emoji`, `nameKey` (i18n key), `questionKeys`, `source` (`wikimedia | mapillary | json`).
+Defines 7 categories: `places`, `geo_roulette`, `people`, `bands`, `movies`, `sport`, `history`. Each has `id`, `emoji`, `nameKey` (i18n key), `questionKeys`, `source` (`wikimedia | mapillary | wikipedia`).
 
 ### `src/data/cities.ts`
 

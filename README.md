@@ -36,6 +36,19 @@ npm run preview
 |---|---|---|
 | `VITE_MAPILLARY_TOKEN` | Geo-Roulette category | Free Mapillary API token |
 
+## Categories
+
+| Category | Entries | Image source |
+|---|---|---|
+| Places & Landmarks | 199 | Wikimedia Commons |
+| Famous People | 239 | Wikipedia infobox portraits |
+| History | 108 | Wikimedia Commons |
+| Movies | 86 | Wikimedia Commons |
+| Bands & Musicians | 79 | Wikimedia Commons |
+| Sport | 68 | Wikimedia Commons |
+| Geo-Roulette | — | Mapillary *(requires token)* |
+
 ## Status
 
-Scaffolding in progress. See the build roadmap in the project brief.
+Core game loop complete and playable. All categories implemented and verified.
+Pending: PWA polish (Step 9), localization audit (Step 10), Geo-Roulette Mapillary token setup.

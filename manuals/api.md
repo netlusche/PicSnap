@@ -10,7 +10,7 @@ All external calls are made directly from the browser. No proxy is needed becaus
 
 ## 1. Wikimedia Commons API
 
-**Used for:** Places, History categories.  
+**Used for:** Places, History, Bands, Movies, Sport categories.  
 **File:** `src/services/wikimedia.ts`
 
 ### Endpoint
@@ -111,7 +111,7 @@ The API may normalize titles (spaces → underscores) or redirect them. The resp
 
 ### Batching
 
-With 202 people entries, the service sends **6 batched requests** (40 titles each, last batch smaller). All batches resolve concurrently via `Promise.all`-style iteration.
+With 239 people entries, the service sends **6 batched requests** (40 titles each, last batch smaller). All batches resolve concurrently via `Promise.all`-style iteration.
 
 ### Response Shape (simplified)
 
@@ -202,48 +202,54 @@ Mapillary results are **not cached** (street imagery changes frequently and toke
 
 ---
 
-## 4. Curated JSON Database (Step 8)
+## 4. TypeScript Data Files (Bands, Movies, Sport)
 
-**Used for:** Bands & Musicians, Film & Series, Sport categories.  
-**File:** `src/data/picsnap_db.json`
+**Used for:** Bands & Musicians, Movies, Sport categories.  
+**Files:** `src/data/bands.ts`, `src/data/movies.ts`, `src/data/sports.ts`
 
-Live APIs for music/film are either CORS-blocked in browsers (Discogs), require server-side proxies, or don't provide freely licensed images. A curated static JSON database solves all three problems.
+These categories use the same Wikimedia Commons API as Places and History (see Section 1), but with their own curated entry lists. Each entry carries a `category` field that maps to a Commons category title.
 
-### Schema
+### Entry Schemas
 
-```json
-[
-  {
-    "id": "bands:beatles",
-    "category": "bands",
-    "imageUrl": "https://upload.wikimedia.org/…/Beatles.jpg",
-    "answers": {
-      "primary": "The Beatles",
-      "secondary": "British Invasion"
-    },
-    "distractors": {
-      "primary": ["The Rolling Stones", "The Who", "Led Zeppelin"],
-      "secondary": ["Psychedelic Rock", "Hard Rock", "Punk"]
-    },
-    "hint": "British Invasion"
-  }
-]
+```ts
+// bands.ts
+interface BandEntry {
+  name: string;       // primary answer
+  category: string;  // Wikimedia Commons category title
+  genre: { en: string; de: string };  // secondary answer
+}
+
+// movies.ts
+interface MovieEntry {
+  title: string;     // primary answer
+  category: string;  // Wikimedia Commons category title
+}
+
+// sports.ts
+interface SportEntry {
+  name: string;       // primary answer
+  category: string;  // Wikimedia Commons category title
+  country: { en: string; de: string };  // secondary answer
+}
 ```
 
-### Image Sources for JSON Entries
+### Why Commons for these categories?
 
-All `imageUrl` values point to Wikimedia Commons (freely licensed, stable URLs). Images must be:
-- Direct Commons upload URLs (`https://upload.wikimedia.org/wikipedia/commons/…`)
-- Minimum resolution 400 × 400 px
-- Clearly identifiable photo of the subject (band, film poster, athlete in action)
+- **Bands:** Band/artist Commons categories contain concert photos, press shots, and live-performance images — far more freely licensed images than Wikipedia lead images (which are often non-free for musicians).
+- **Movies:** Film categories contain production stills, promotional materials, and set photos. Silent-era and pre-1960s films have particularly rich PD archives. Modern films (1980s+) may have fewer freely licensed stills.
+- **Sport:** Athlete Commons categories contain action shots from competitions, award ceremonies, and press events.
 
-### Building the Pool from JSON
+### Building the Pool
 
-`buildForCategory()` in `imageFetcher.ts` falls through to `buildFromJson(category)` for `bands`, `movies`, and `sport`. This function filters `picsnap_db.json` by category and returns `QuizItem[]` directly (no API call needed).
+`buildForCategory()` in `imageFetcher.ts` calls `buildWikimedia()` for all three categories, identical to how Places and History work. The generic helper shuffles entries, fetches up to `perEntry + 6` images per Commons category (to compensate for NON_PHOTO filtering), and assembles `QuizItem[]`.
 
-### Target Entry Count
+### Current Entry Counts
 
-≥ 50 entries per category to ensure variety across multiple play sessions.
+| File | Entries | Theoretical pool (perEntry = 5) |
+|---|---|---|
+| `bands.ts` | 79 | ~395 |
+| `movies.ts` | 86 | ~430 |
+| `sports.ts` | 68 | ~340 |
 
 ---
 
