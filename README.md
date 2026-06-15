@@ -50,12 +50,14 @@ npm run preview
 
 ## Features
 
-- **Liked Images** — heart-button on the result screen saves images; persists across games; collapsible list on the start screen with lightbox zoom
+- **Round-based categories** — all players in the same round see the same category; categories cycle evenly across rounds
+- **Liked Images** — heart-button on the result screen saves images (max 40); persists across games; collapsible list on the start screen with lightbox zoom
 - **Lightbox** — tap any played or liked image thumbnail to view full-size with a ✕ close button
 - **Category enforcement** — no category pre-selected; Start Game is disabled until at least one is chosen
-- **14 visual themes** with matching canvas background animations
+- **15 visual themes** with matching canvas background animations (including the PicSnap-branded Default theme)
 - **EN / DE** localization
+- **PWA** — installable on iOS and Android; app icon, splash, OG image for WhatsApp/social sharing
 
 ## Status
 
-All features complete and playable. v0.2.0.
+All features complete and playable. v0.2.5.

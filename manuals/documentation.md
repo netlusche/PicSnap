@@ -97,7 +97,7 @@ All game state lives in a single `GameState` managed by `useReducer`. The contex
 | `phase` | `GamePhase` | Current screen (see Game Flow) |
 | `players` | `Player[]` | Name + accumulated score per player |
 | `currentPlayerIndex` | `number` | Index into `players` |
-| `pool` | `QuizItem[]` | Pre-fetched, shuffled image pool |
+| `pool` | `QuizItem[]` | Pre-fetched pool ordered by round: all items for round N appear before round N+1, items within a round share the same category |
 | `poolIndex` | `number` | Pointer into the pool for the current turn |
 | `history` | `RoundResult[]` | Rounds already played (for final results screen) |
 | `likedItems` | `RoundResult[]` | Images the player liked; persists across PLAY_AGAIN and RESET_GAME |
@@ -182,13 +182,23 @@ function scoreForTime(elapsedSeconds: number): number {
 
 All image fetching is coordinated by `src/services/imageFetcher.ts`.
 
-### Pool Size Formula
+### Pool Structure
+
+The pool is built **round-by-round** to guarantee that all players in the same round see the same category:
+
+1. Selected categories are shuffled into a cycle (e.g. `[Geo, People, Places, Geo, People]` for 5 rounds with 3 categories)
+2. For each round, exactly `players` items are drawn from the assigned category's shuffled queue
+3. The final pool is `rounds × players` items in round order — no further shuffle
+
+The sequential `poolIndex` in game state walks through this pool naturally; no game-loop changes are needed.
+
+### Fetch Target Formula
 
 ```ts
 Math.max(200, players * rounds * 2)
 ```
 
-The ×2 factor buffers for load failures, deduplication, and distractors. Minimum 200 ensures even short games have variety.
+Used as the per-category fetch budget (not the final pool size). The ×2 factor and 200-minimum buffer for load failures and deduplication before the round-based selection.
 
 ### Per-Category Builders
 
@@ -364,7 +374,7 @@ npm run build        # outputs to dist/
 npm run preview      # preview production build locally
 ```
 
-Deployment target: **Vercel** (static site). `vercel.json` routes all paths to `index.html` for SPA support.
+Deployment target: **Strato** static hosting at `https://plando.de/ps`. Upload the `dist/` folder contents after each build.
 
 Environment variables:
 | Variable | Required | Description |
@@ -394,6 +404,10 @@ Environment variables:
 **Liked images persist across resets, capped at 40.** `likedItems` is explicitly excluded from both `PLAY_AGAIN` and `RESET_GAME` resets. `TOGGLE_LIKE` silently skips the add when the cap is reached; unlike always works regardless of count. This lets a player collect favorites across multiple game sessions in the same browser tab. `localStorage` merge uses `{ ...initialState, ...(loaded) }` to ensure new state fields (like `likedItems`) are always present even when loading an older cached state.
 
 **Category pre-selection enforcement.** `CategoryScreen` initialises with an empty selection (`useState<CategoryId[]>([])`). The Start Game button is `disabled` until at least one category is selected. This prevents accidentally starting a game with an empty pool.
+
+**Round-based category assignment.** The pool is structured so all `players` items in a given round belong to the same category. Categories are shuffled into a cycle before pool assembly, ensuring even distribution across rounds. This prevents a single category from dominating back-to-back turns (e.g. 5 consecutive Geo-Roulette rounds when all categories are selected).
+
+**PicSnap Default theme.** The `default` theme uses the app logo palette: deep navy background (`#060d1e`), electric blue primary (`#2589f5`), orange secondary (`#f77f00`). The title gradient and primary button gradient derive from `--primary`/`--secondary` CSS variables automatically. The original Neon Party (purple/pink) is now a separate `neon_party` theme entry at the bottom of the list.
 
 **App footer — version injection.** `vite.config.ts` exposes `__APP_VERSION__` via Vite's `define` (sourced from `process.env.npm_package_version`, set automatically by npm). The `SetupScreen` footer renders this at build time — no runtime fetch needed.
 
