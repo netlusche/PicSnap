@@ -186,7 +186,7 @@ export async function buildImagePool(
 
   const perCategory = await Promise.all(categories.map((cat) => buildForCategory(cat, target, lang)));
 
-  // Deduplicate each category's results separately, then shuffle into per-category queues.
+  // Deduplicate across all categories, build per-category shuffled queues.
   const seen = new Set<string>();
   const catQueues = new Map<CategoryId, QuizItem[]>();
   categories.forEach((cat, idx) => {
@@ -198,24 +198,31 @@ export async function buildImagePool(
     catQueues.set(cat, shuffleArray(deduped));
   });
 
-  // Assign one category per round, cycling through a shuffled category list.
-  // This guarantees all players in the same round see the same category.
+  // Build distractors from the FULL per-category queues — not from the game-pool slice.
+  // This keeps distractor pools rich even when a category contributes only 1-2 items per round.
+  const richPool = withDistractors([...catQueues.values()].flat());
+  const byId = new Map(richPool.map((i) => [i.id, i]));
+
+  // Assign one category per round (shuffled cycle) so all players in a round
+  // see the same category.
   const catCycle = shuffleArray([...categories]);
   const roundCategories: CategoryId[] = Array.from(
     { length: rounds },
     (_, i) => catCycle[i % catCycle.length]
   );
 
-  // Draw exactly `players` items per round from the assigned category's queue.
+  // Draw exactly `players` items per round, attaching the pre-built distractors.
   const catPointers = new Map<CategoryId, number>();
   const pool: QuizItem[] = [];
   for (const cat of roundCategories) {
     const queue = catQueues.get(cat) ?? [];
     const ptr = catPointers.get(cat) ?? 0;
-    const slice = queue.slice(ptr, ptr + players);
-    if (slice.length > 0) pool.push(...slice);
+    for (let p = 0; p < players; p++) {
+      const item = queue[ptr + p];
+      if (item) pool.push(byId.get(item.id) ?? item);
+    }
     catPointers.set(cat, ptr + players);
   }
 
-  return withDistractors(pool);
+  return pool;
 }
