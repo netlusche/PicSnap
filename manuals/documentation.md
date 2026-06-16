@@ -53,6 +53,8 @@ src/
 ├── vite-env.d.ts              # TypeScript: VITE_MAPILLARY_TOKEN
 ├── types/
 │   └── index.ts               # Shared types (QuizItem, Player, GameState, …)
+├── hooks/
+│   └── useWakeLock.ts          # Screen Wake Lock API, active during gameplay
 ├── state/
 │   ├── GameContext.tsx         # Context provider, localStorage sync
 │   └── gameReducer.ts         # Pure reducer + initialState + GameAction union
@@ -361,6 +363,14 @@ Configured via `vite-plugin-pwa` in `vite.config.ts`. Workbox generates a servic
 
 For Mapillary Geo-Roulette to work, the user must provide `VITE_MAPILLARY_TOKEN` in `.env`. The app degrades gracefully (empty pool for that category) when the token is absent.
 
+### Screen Wake Lock
+
+`useWakeLock(active: boolean)` (`src/hooks/useWakeLock.ts`) requests `navigator.wakeLock.request('screen')` while `active` is `true`, preventing the screen from dimming or locking during gameplay. Used in `App.tsx` with `active = inGame` (`PASS_DEVICE`, `QUIZ`, `TURN_RESULT` — not `SETUP`, `CATEGORY_SELECTION`, or `FINAL_RESULTS`).
+
+- The Wake Lock is released automatically by the browser when the tab is hidden; a `visibilitychange` listener re-requests it once the tab becomes visible again, so the lock survives app-switching mid-game.
+- Feature-detected via `'wakeLock' in navigator`; the request is wrapped in try/catch, so unsupported or denied environments silently fall back to default screen-timeout behavior.
+- Supported on iOS 16.4+ Safari/PWA and Android Chrome 84+.
+
 ---
 
 ## 13. Build & Deployment
@@ -412,3 +422,5 @@ Environment variables:
 **App footer — version injection.** `vite.config.ts` exposes `__APP_VERSION__` via Vite's `define` (sourced from `process.env.npm_package_version`, set automatically by npm). The `SetupScreen` footer renders this at build time — no runtime fetch needed.
 
 **Game footer — fixed bar + paddingBottom wrapper.** During active play (PASS_DEVICE / QUIZ / TURN_RESULT), `MainApp` renders a `position:fixed` pill-button bar at the bottom of the screen. To prevent the bar from overlapping page content, `<MainContent />` is wrapped in a div with `paddingBottom: '3.5rem'` whenever `inGame` is true. The three buttons open modal overlays: "Selected categories" (chip list of active categories), "Score" (live leaderboard), "Start over" (warning dialog with `RESET_GAME` dispatch). The restart warning overlay does not close on backdrop click to prevent accidental resets.
+
+**Screen Wake Lock tied to `inGame`.** `useWakeLock` is driven by the same `inGame` boolean as the footer bar, so the lock is acquired/released in lockstep with gameplay — no separate phase logic to keep in sync. The hook is a direct port of MelodyMatch's `useWakeLock`, including the `visibilitychange` re-acquire workaround for the browser's automatic release-on-hide behavior.

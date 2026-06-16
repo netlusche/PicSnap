@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { GameProvider, useGame } from './state/GameContext';
+import { useWakeLock } from './hooks/useWakeLock';
 import { BackgroundEffects } from './components/BackgroundEffects';
 import { SetupScreen } from './components/SetupScreen';
 import { CategoryScreen } from './components/CategoryScreen';
@@ -68,6 +69,8 @@ const MainApp: React.FC = () => {
   const [showRestart, setShowRestart] = useState(false);
 
   const inGame = ['PASS_DEVICE', 'QUIZ', 'TURN_RESULT'].includes(state.phase);
+
+  useWakeLock(inGame);
 
   React.useEffect(() => {
     document.body.className = '';
