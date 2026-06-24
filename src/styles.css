@@ -1350,15 +1350,15 @@ body {
 
 .share-bar {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.6rem;
+  flex-wrap: nowrap;
+  gap: 0.5rem;
   justify-content: center;
 }
 
 .share-btn {
   width: 48px;
   height: 48px;
-  border-radius: 14px;
+  border-radius: 20px;
   border: none;
   cursor: pointer;
   display: flex;
@@ -1377,8 +1377,8 @@ body {
 .share-btn--fb     { background: #1877F2; }
 .share-btn--tg     { background: #2AABEE; }
 .share-btn--reddit { background: #FF4500; }
-.share-btn--copy   { background: var(--card-hover); border: 1px solid var(--border); color: var(--text); }
-.share-btn--native { background: var(--primary); }
+.share-btn--native { background: #7C3AED; }
+.share-btn--copy   { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15); color: #fff; }
 
 /* ────────────────────────────────────────────────────────
    MODAL
