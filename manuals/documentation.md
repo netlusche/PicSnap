@@ -74,6 +74,7 @@ src/
 │   ├── sports.ts               # 68 athlete entries
 │   └── cities.ts               # 85 city bounding boxes for Geo-Roulette (all continents)
 ├── components/
+│   ├── LandingScreen.tsx       # Splash screen (LANDING phase): logo, tagline, share bar
 │   ├── SetupScreen.tsx
 │   ├── CategoryScreen.tsx      # Category picker + pool fetch + validation
 │   ├── PassDeviceScreen.tsx
@@ -120,8 +121,9 @@ All game state lives in a single `GameState` managed by `useReducer`. The contex
 | `END_TURN` | Add points, push round to history |
 | `NEXT_TURN` | Advance `poolIndex`, transition to next player |
 | `TOGGLE_LIKE` | Add/remove a `RoundResult` from `likedItems` (toggled by `item.id`); capped at 40 items — unlike always works, like is a no-op when the cap is reached |
-| `PLAY_AGAIN` | Keep players + `likedItems`, reset scores/history/pool |
-| `RESET_GAME` | Reset to setup, keep `theme`, `lang`, and `likedItems` |
+| `PLAY_AGAIN` | Keep players + `likedItems`, reset scores/history/pool, go to `SETUP` |
+| `PLAY_AGAIN_SAME` | Same players + categories, re-fetched pool injected via payload, scores reset, go directly to `PASS_DEVICE` — no category selection |
+| `RESET_GAME` | Reset to `LANDING`, keep `theme`, `lang`, and `likedItems` |
 
 ### Persistence
 
@@ -132,6 +134,8 @@ All game state lives in a single `GameState` managed by `useReducer`. The contex
 ## 4. Game Flow
 
 ```
+LANDING  (splash: logo, tagline, share bar, "Let's play!" button)
+  ↓  GO_TO_SETUP
 SETUP
   ↓  (player names, round count, theme, language)
 CATEGORY_SELECTION
@@ -148,8 +152,9 @@ TURN_RESULT  (points awarded, correct answer shown)
   ├─ More turns? → PASS_DEVICE
   └─ Final round done? → FINAL_RESULTS
                           ↓
-                       PLAY_AGAIN → CATEGORY_SELECTION (players kept, scores reset)
-                       RESET_GAME → SETUP
+                       PLAY_AGAIN → SETUP (players kept, scores reset, pool cleared)
+                       PLAY_AGAIN_SAME → PASS_DEVICE (same players+categories, fresh pool, no UI step)
+                       RESET_GAME → LANDING (via initialState)
 ```
 
 Each player plays one turn per round. A "turn" consumes one `QuizItem` from the pool.
@@ -302,12 +307,13 @@ Wikipedia lead images are cached per article title (`wpimg:{title}`). Wikimedia 
 
 | Component / module | Responsibility |
 |---|---|
+| `LandingScreen` | First screen on a fresh/reset session: pulsing logo, tagline, "Let's play!" CTA, social share bar (WA / FB / TG / Reddit / copy / native), API footer. Dispatches `GO_TO_SETUP`. |
 | `SetupScreen` | Player names, round count, theme/language picker; collapsible "Liked ❤️" section with lightbox; app footer with API credits + version |
 | `CategoryScreen` | Category selection — none pre-selected, Start Game disabled until ≥1 chosen; triggers pool fetch; shows warning if pool too small |
 | `PassDeviceScreen` | Hand-off screen — shows active player name, blurred until "Begin Turn" tapped |
 | `QuizScreen` | 3-2-1 countdown → image display → primary question → secondary question; dispatches `END_TURN` with score |
 | `TurnResultScreen` | Shows correct answer, points earned, updated leaderboard; like-button (❤️) on the revealed image |
-| `FinalResultsScreen` | Trophy, winner, leaderboard, played-image history with like-buttons and lightbox zoom; cannon confetti |
+| `FinalResultsScreen` | Trophy, winner, leaderboard, played-image history with like-buttons and lightbox zoom; cannon confetti; "Nochmal spielen" button (re-fetches pool, dispatches `PLAY_AGAIN_SAME`); share bar; subtle "Neu starten" pill in footer (dispatches `RESET_GAME` → `LANDING`) |
 | `BackgroundEffects` | 14 canvas animations; rendered **outside** any CSS-transformed ancestor to keep `position:fixed` anchored correctly |
 | `App.tsx` (`MainApp`) | Game footer bar (3 pill buttons: Selected categories, Score, Start over) + three modal overlays. Visible only during PASS_DEVICE / QUIZ / TURN_RESULT phases. |
 
@@ -422,5 +428,9 @@ Environment variables:
 **App footer — version injection.** `vite.config.ts` exposes `__APP_VERSION__` via Vite's `define` (sourced from `process.env.npm_package_version`, set automatically by npm). The `SetupScreen` footer renders this at build time — no runtime fetch needed.
 
 **Game footer — fixed bar + paddingBottom wrapper.** During active play (PASS_DEVICE / QUIZ / TURN_RESULT), `MainApp` renders a `position:fixed` pill-button bar at the bottom of the screen. To prevent the bar from overlapping page content, `<MainContent />` is wrapped in a div with `paddingBottom: '3.5rem'` whenever `inGame` is true. The three buttons open modal overlays: "Selected categories" (chip list of active categories), "Score" (live leaderboard), "Start over" (warning dialog with `RESET_GAME` dispatch). The restart warning overlay does not close on backdrop click to prevent accidental resets.
+
+**Landing screen as entry point.** `initialState.phase = 'LANDING'` so every fresh session and every `RESET_GAME` starts at the splash screen. `PLAY_AGAIN` goes to `SETUP` (not LANDING) to keep players while allowing full reconfiguration. `PLAY_AGAIN_SAME` skips all setup and goes straight to `PASS_DEVICE` using the same players, categories, and a freshly-fetched pool — triggered from the winner screen's "Nochmal spielen" button. The `inGame` check in `App.tsx` does not include `LANDING`, so no game footer or Wake Lock is shown on the splash. Old localStorage sessions that were mid-game restore directly to their saved phase — LANDING is only the entry for brand-new or reset sessions.
+
+**Share bar platform colors.** The social share buttons use official brand colors hard-coded in CSS (`.share-btn--wa #25D366`, `.share-btn--fb #1877F2`, `.share-btn--tg #2AABEE`, `.share-btn--reddit #FF4500`) so they're immediately recognizable regardless of the active theme. Copy and native-share buttons use theme variables (`--card-hover`, `--primary`) to stay on-theme.
 
 **Screen Wake Lock tied to `inGame`.** `useWakeLock` is driven by the same `inGame` boolean as the footer bar, so the lock is acquired/released in lockstep with gameplay — no separate phase logic to keep in sync. The hook is a direct port of MelodyMatch's `useWakeLock`, including the `visibilitychange` re-acquire workaround for the browser's automatic release-on-hide behavior.

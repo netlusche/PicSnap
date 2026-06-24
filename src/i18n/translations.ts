@@ -86,6 +86,14 @@ export const translations = {
     cat_movies_fields: 'Which movie / series?',
     cat_sport_fields: 'Who / what? / Which club or country?',
     cat_history_fields: 'What is shown? / When (roughly)?',
+
+    // Landing screen / final results
+    playAgain: 'Play again',
+    letsPlay: "Let's play!",
+    shareGame: 'Share PicSnap',
+    copyLink: 'Copy link',
+    copied: 'Copied ✓',
+    shareText: 'Play PicSnap – the picture quiz!',
   },
   de: {
     appName: 'PicSnap',
@@ -173,6 +181,14 @@ export const translations = {
     cat_movies_fields: 'Welcher Film / Serie?',
     cat_sport_fields: 'Wer / was? / Welcher Verein oder Land?',
     cat_history_fields: 'Was ist zu sehen? / Wann (grob)?',
+
+    // Landing screen / final results
+    playAgain: 'Nochmal spielen',
+    letsPlay: 'Los geht\'s!',
+    shareGame: 'PicSnap teilen',
+    copyLink: 'Link kopieren',
+    copied: 'Kopiert ✓',
+    shareText: 'Spiel PicSnap – das Bilder-Quiz!',
   },
 } as const;
 

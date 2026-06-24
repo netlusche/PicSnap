@@ -9,6 +9,7 @@ A fast-paced, local **pass-the-device multiplayer picture quiz** built with Reac
 ## ✨ Features
 
 ### 🎮 Gameplay
+- **Splash & Share**: A landing screen greets new sessions with the app logo, tagline, a "Let's play!" button, and a share bar (WhatsApp, Facebook, Telegram, Reddit, copy link, native share).
 - **Local Multiplayer**: Pass one device between 2–6 players — each gets their own timed turn to guess the image.
 - **Speed Scoring**: Points scale down linearly the longer a player takes to answer, rewarding fast, confident taps.
 - **Round-Based Categories**: All players in the same round see the same category — categories are shuffled into a cycle so they're distributed evenly across rounds instead of one category dominating consecutive turns.
@@ -41,6 +42,8 @@ A fast-paced, local **pass-the-device multiplayer picture quiz** built with Reac
 ### 🏆 End Screen
 - **Winner Screen**: Confetti animation, final leaderboard, and full played-image history with per-image points breakdown.
 - **Replay & Like**: Every played image is shown as a thumbnail with a like-button and lightbox zoom, so you can revisit and save your favorites after the game.
+- **Nochmal spielen / Play again**: One tap re-fetches a fresh image pool with the same players and categories and jumps straight to the first turn — no setup screens.
+- **Share & Reset**: Share bar (WhatsApp, Facebook, Telegram, Reddit, copy link, native share) and a subtle "Start over" pill that returns to the landing screen.
 
 ### 🎨 Themes & Visuals
 - **16 Visual Themes** — including the PicSnap-branded **Default** theme (navy background, electric blue and orange accents, matching the app logo) and **Neon Party**, each with its own canvas background animation (bubbles, neon grid, stars, fireflies, nebula, snowflakes, and more).
@@ -98,4 +101,4 @@ This application is a **non-commercial hobby project** developed solely for ente
 
 ## Status
 
-All features complete and playable. v0.2.7.
+All features complete and playable. v0.2.8.

@@ -35,6 +35,7 @@ export interface Player {
 }
 
 export type GamePhase =
+  | 'LANDING'
   | 'SETUP'
   | 'CATEGORY_SELECTION'
   | 'PASS_DEVICE'

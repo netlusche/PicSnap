@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { GameProvider, useGame } from './state/GameContext';
 import { useWakeLock } from './hooks/useWakeLock';
 import { BackgroundEffects } from './components/BackgroundEffects';
+import { LandingScreen } from './components/LandingScreen';
 import { SetupScreen } from './components/SetupScreen';
 import { CategoryScreen } from './components/CategoryScreen';
 import { PassDeviceScreen } from './components/PassDeviceScreen';
@@ -42,6 +43,8 @@ const PlaceholderScreen: React.FC = () => {
 const MainContent: React.FC = () => {
   const { state } = useGame();
   switch (state.phase) {
+    case 'LANDING':
+      return <LandingScreen />;
     case 'SETUP':
       return <SetupScreen />;
     case 'CATEGORY_SELECTION':

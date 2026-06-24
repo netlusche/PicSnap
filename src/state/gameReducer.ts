@@ -3,6 +3,7 @@ import { GameState, Language, Theme, Player, CategoryId, QuizItem, GamePhase, Ro
 export type GameAction =
   | { type: 'SET_THEME'; payload: { theme: Theme } }
   | { type: 'SET_LANG'; payload: { lang: Language } }
+  | { type: 'GO_TO_SETUP' }
   | { type: 'CONTINUE_TO_CATEGORIES'; payload: { players: Player[]; totalRounds: number; lang: Language } }
   | { type: 'SET_POOL'; payload: { pool: QuizItem[] } }
   | { type: 'START_GAME'; payload: { categories: CategoryId[] } }
@@ -11,6 +12,7 @@ export type GameAction =
   | { type: 'NEXT_TURN' }
   | { type: 'TOGGLE_LIKE'; payload: { result: RoundResult } }
   | { type: 'PLAY_AGAIN' }
+  | { type: 'PLAY_AGAIN_SAME'; payload: { pool: QuizItem[] } }
   | { type: 'RESET_GAME' };
 
 export const initialState: GameState = {
@@ -20,7 +22,7 @@ export const initialState: GameState = {
   currentPlayerIndex: 0,
   currentRound: 1,
   totalRounds: 10,
-  phase: 'SETUP',
+  phase: 'LANDING',
   categories: ['places'],
   pool: [],
   currentItem: null,
@@ -35,6 +37,8 @@ export const gameReducer = (state: GameState, action: GameAction): GameState => 
       return { ...state, theme: action.payload.theme };
     case 'SET_LANG':
       return { ...state, lang: action.payload.lang };
+    case 'GO_TO_SETUP':
+      return { ...state, phase: 'SETUP' };
     case 'CONTINUE_TO_CATEGORIES':
       return {
         ...state,
@@ -125,6 +129,19 @@ export const gameReducer = (state: GameState, action: GameAction): GameState => 
         turnPoints: 0,
         history: [],
         // likedItems intentionally kept — persist across games
+      };
+    case 'PLAY_AGAIN_SAME':
+      // Same players + categories, fresh pool, scores reset, straight to PASS_DEVICE.
+      return {
+        ...state,
+        phase: 'PASS_DEVICE',
+        currentPlayerIndex: 0,
+        currentRound: 1,
+        players: state.players.map((p) => ({ ...p, score: 0 })),
+        pool: action.payload.pool,
+        currentItem: null,
+        turnPoints: 0,
+        history: [],
       };
     case 'RESET_GAME':
       // Keep theme, language and liked images; reset everything else.

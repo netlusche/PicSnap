@@ -1296,6 +1296,89 @@ body {
   color: var(--text-muted);
   opacity: 0.6;
 }
+.final-restart-btn {
+  margin-top: 0.6rem;
+  padding: 0.45rem 1.1rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.final-restart-btn:hover { background: var(--card-hover); color: var(--text); }
+.final-restart-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* ────────────────────────────────────────────────────────
+   LANDING SCREEN
+   ──────────────────────────────────────────────────────── */
+
+@keyframes logo-pulse {
+  0%, 100% { transform: scale(1); }
+  50%       { transform: scale(1.06); }
+}
+
+.landing-logo {
+  width: 120px;
+  height: 120px;
+  border-radius: 24px;
+  animation: logo-pulse 2.8s ease-in-out infinite;
+  margin-bottom: 0.5rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .landing-logo { animation: none; }
+}
+
+.share-section {
+  width: 100%;
+  max-width: 26rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.share-label {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.share-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  justify-content: center;
+}
+
+.share-btn {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 1.25rem;
+  transition: opacity 0.15s, transform 0.15s;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+.share-btn:hover { opacity: 0.85; transform: scale(1.07); }
+.share-btn:active { transform: scale(0.95); }
+
+.share-btn--wa     { background: #25D366; }
+.share-btn--fb     { background: #1877F2; }
+.share-btn--tg     { background: #2AABEE; }
+.share-btn--reddit { background: #FF4500; }
+.share-btn--copy   { background: var(--card-hover); border: 1px solid var(--border); color: var(--text); }
+.share-btn--native { background: var(--primary); }
 
 /* ────────────────────────────────────────────────────────
    MODAL
