@@ -39,7 +39,7 @@ export const LandingScreen: React.FC = () => {
   return (
     <div className="screen center-content fade-in">
       <img
-        src="/pwa-512.png"
+        src="pwa-512.png"
         alt="PicSnap logo"
         className="landing-logo"
       />
