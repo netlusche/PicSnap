@@ -103,4 +103,67 @@ export const SPORTS: SportEntry[] = [
 
   // ── Motorcycling ───────────────────────────────────────────────────────────
   { name: 'Valentino Rossi',       category: 'Valentino Rossi',               country: { en: 'Italy',            de: 'Italien' } },
+
+  // ── More Football (Soccer) ─────────────────────────────────────────────────
+  { name: 'Roberto Carlos',        category: 'Roberto Carlos',                country: { en: 'Brazil',           de: 'Brasilien' } },
+  { name: 'Luka Modrić',           category: 'Luka Modrić',                   country: { en: 'Croatia',          de: 'Kroatien' } },
+  { name: 'Andrés Iniesta',        category: 'Andrés Iniesta',                country: { en: 'Spain',            de: 'Spanien' } },
+  { name: 'Xavi',                  category: 'Xavi',                          country: { en: 'Spain',            de: 'Spanien' } },
+  { name: 'Robert Lewandowski',    category: 'Robert Lewandowski',            country: { en: 'Poland',           de: 'Polen' } },
+  { name: 'Mohamed Salah',         category: 'Mohamed Salah',                 country: { en: 'Egypt',            de: 'Ägypten' } },
+  { name: 'Erling Haaland',        category: 'Erling Haaland',                country: { en: 'Norway',           de: 'Norwegen' } },
+  { name: 'Marco van Basten',      category: 'Marco van Basten',              country: { en: 'Netherlands',      de: 'Niederlande' } },
+  { name: 'Eusébio',               category: 'Eusébio',                       country: { en: 'Portugal',         de: 'Portugal' } },
+  { name: 'Didier Drogba',         category: 'Didier Drogba',                 country: { en: 'Ivory Coast',      de: 'Elfenbeinküste' } },
+  { name: 'Gareth Bale',           category: 'Gareth Bale',                   country: { en: 'Wales',            de: 'Wales' } },
+
+  // ── More Basketball ────────────────────────────────────────────────────────
+  { name: 'Charles Barkley',       category: 'Charles Barkley',               country: { en: 'USA',              de: 'USA' } },
+  { name: 'Kevin Durant',          category: 'Kevin Durant',                  country: { en: 'USA',              de: 'USA' } },
+  { name: 'Dirk Nowitzki',         category: 'Dirk Nowitzki',                 country: { en: 'Germany',          de: 'Deutschland' } },
+  { name: 'Giannis Antetokounmpo', category: 'Giannis Antetokounmpo',         country: { en: 'Greece',           de: 'Griechenland' } },
+
+  // ── More Tennis ────────────────────────────────────────────────────────────
+  { name: 'John McEnroe',          category: 'John McEnroe',                  country: { en: 'USA',              de: 'USA' } },
+  { name: 'Björn Borg',            category: 'Björn Borg',                    country: { en: 'Sweden',           de: 'Schweden' } },
+  { name: 'Jimmy Connors',         category: 'Jimmy Connors',                 country: { en: 'USA',              de: 'USA' } },
+  { name: 'Iga Świątek',           category: 'Iga Świątek',                   country: { en: 'Poland',           de: 'Polen' } },
+
+  // ── More Boxing ────────────────────────────────────────────────────────────
+  { name: 'Sugar Ray Leonard',     category: 'Sugar Ray Leonard',             country: { en: 'USA',              de: 'USA' } },
+  { name: 'Manny Pacquiao',        category: 'Manny Pacquiao',                country: { en: 'Philippines',      de: 'Philippinen' } },
+  { name: 'Oscar De La Hoya',      category: 'Oscar De La Hoya',              country: { en: 'USA',              de: 'USA' } },
+  { name: 'Lennox Lewis',          category: 'Lennox Lewis',                  country: { en: 'United Kingdom',   de: 'Großbritannien' } },
+
+  // ── More Swimming ──────────────────────────────────────────────────────────
+  { name: 'Mark Spitz',            category: 'Mark Spitz',                    country: { en: 'USA',              de: 'USA' } },
+
+  // ── More Cycling ───────────────────────────────────────────────────────────
+  { name: 'Bernard Hinault',       category: 'Bernard Hinault',               country: { en: 'France',           de: 'Frankreich' } },
+  { name: 'Miguel Indurain',       category: 'Miguel Induráin',               country: { en: 'Spain',            de: 'Spanien' } },
+  { name: 'Tadej Pogačar',         category: 'Tadej Pogačar',                 country: { en: 'Slovenia',         de: 'Slowenien' } },
+
+  // ── Baseball ───────────────────────────────────────────────────────────────
+  { name: 'Mickey Mantle',         category: 'Mickey Mantle',                 country: { en: 'USA',              de: 'USA' } },
+  { name: 'Hank Aaron',            category: 'Hank Aaron',                    country: { en: 'USA',              de: 'USA' } },
+  { name: 'Willie Mays',           category: 'Willie Mays',                   country: { en: 'USA',              de: 'USA' } },
+
+  // ── Rugby ──────────────────────────────────────────────────────────────────
+  { name: 'Jonah Lomu',            category: 'Jonah Lomu',                    country: { en: 'New Zealand',      de: 'Neuseeland' } },
+  { name: 'Martin Johnson',        category: 'Martin Johnson (rugby union)',   country: { en: 'United Kingdom',   de: 'Großbritannien' } },
+
+  // ── Cricket ────────────────────────────────────────────────────────────────
+  { name: 'Sachin Tendulkar',      category: 'Sachin Tendulkar',              country: { en: 'India',            de: 'Indien' } },
+
+  // ── American Football ──────────────────────────────────────────────────────
+  { name: 'Jerry Rice',            category: 'Jerry Rice',                    country: { en: 'USA',              de: 'USA' } },
+  { name: 'Patrick Mahomes',       category: 'Patrick Mahomes',               country: { en: 'USA',              de: 'USA' } },
+
+  // ── Ice Hockey ─────────────────────────────────────────────────────────────
+  { name: 'Mario Lemieux',         category: 'Mario Lemieux',                 country: { en: 'Canada',           de: 'Kanada' } },
+  { name: 'Gordie Howe',           category: 'Gordie Howe',                   country: { en: 'Canada',           de: 'Kanada' } },
+
+  // ── Winter Sports ──────────────────────────────────────────────────────────
+  { name: 'Lindsey Vonn',          category: 'Lindsey Vonn',                  country: { en: 'USA',              de: 'USA' } },
+  { name: 'Hermann Maier',         category: 'Hermann Maier',                 country: { en: 'Austria',          de: 'Österreich' } },
 ];

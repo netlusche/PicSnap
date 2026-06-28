@@ -69,9 +69,9 @@ src/
 │   ├── people.ts               # 239 famous-person entries
 │   ├── places.ts               # 199 landmark entries
 │   ├── historyItems.ts         # 108 historical-subject entries
-│   ├── bands.ts                # 79 band/musician entries
-│   ├── movies.ts               # 86 film entries (with decade field for secondary answer)
-│   ├── sports.ts               # 68 athlete entries
+│   ├── bands.ts                # 126 band/musician entries
+│   ├── movies.ts               # 139 film entries (with decade field for secondary answer)
+│   ├── sports.ts               # 107 athlete entries
 │   └── cities.ts               # 85 city bounding boxes for Geo-Roulette (all continents)
 ├── components/
 │   ├── LandingScreen.tsx       # Splash screen (LANDING phase): logo, tagline, share bar
@@ -270,15 +270,15 @@ interface QuizItem {
 
 ### `src/data/bands.ts`
 
-79 entries: `{ name, category, genre: { en, de } }`. `category` is a Wikimedia Commons category title — band/artist categories contain concert photos, press shots, and live-performance images. Covers classic rock, metal, grunge, punk/new wave, electronic, pop, hip-hop, soul, jazz, and K-pop.
+126 entries: `{ name, category, genre: { en, de } }`. `category` is a Wikimedia Commons category title — band/artist categories contain concert photos, press shots, and live-performance images. Covers classic rock, metal, grunge, punk/new wave, electronic, pop, hip-hop, soul, jazz, K-pop, and country.
 
 ### `src/data/movies.ts`
 
-86 entries: `{ title, category, decade }`. `category` is a Wikimedia Commons category title. `decade` is the release decade base year (e.g. `1970`), formatted as the secondary answer: `"1970s"` (EN) / `"1970er"` (DE). Covers silent era, Disney animation classics, and films from the 1930s through the 1990s.
+139 entries: `{ title, category, decade }`. `category` is a Wikimedia Commons category title. `decade` is the release decade base year (e.g. `1970`), formatted as the secondary answer: `"1970s"` (EN) / `"1970er"` (DE). Covers silent era, Disney animation classics, and films from the 1930s through the 2010s.
 
 ### `src/data/sports.ts`
 
-68 entries: `{ name, category, country: { en, de } }`. `category` is a Wikimedia Commons category title — athlete categories contain action shots, press photos, and award ceremonies. Covers football, basketball, tennis, athletics, boxing, swimming, gymnastics, Formula One, cycling, golf, and more.
+107 entries: `{ name, category, country: { en, de } }`. `category` is a Wikimedia Commons category title — athlete categories contain action shots, press photos, and award ceremonies. Covers football, basketball, tennis, athletics, boxing, swimming, gymnastics, Formula One, cycling, golf, baseball, rugby, cricket, American football, ice hockey, and winter sports.
 
 ### `src/data/categories.ts`
 

@@ -102,4 +102,67 @@ export const BANDS: BandEntry[] = [
   { name: 'Frank Sinatra',      category: 'Frank Sinatra',        genre: { en: 'Jazz',          de: 'Jazz' } },
   { name: 'Louis Armstrong',    category: 'Louis Armstrong',      genre: { en: 'Jazz',          de: 'Jazz' } },
   { name: 'Miles Davis',        category: 'Miles Davis',          genre: { en: 'Jazz',          de: 'Jazz' } },
+  { name: 'Ella Fitzgerald',    category: 'Ella Fitzgerald',      genre: { en: 'Jazz',          de: 'Jazz' } },
+  { name: 'Duke Ellington',     category: 'Duke Ellington',       genre: { en: 'Jazz',          de: 'Jazz' } },
+
+  // ── More Classic Rock ──────────────────────────────────────────────────────
+  { name: 'The Beach Boys',     category: 'The Beach Boys',       genre: { en: 'Rock',          de: 'Rock' } },
+  { name: 'Santana',            category: 'Santana (band)',        genre: { en: 'Rock',          de: 'Rock' } },
+  { name: 'Van Halen',          category: 'Van Halen',            genre: { en: 'Hard Rock',     de: 'Hard Rock' } },
+  { name: 'Lynyrd Skynyrd',     category: 'Lynyrd Skynyrd',       genre: { en: 'Rock',          de: 'Rock' } },
+  { name: 'Tom Petty',          category: 'Tom Petty',            genre: { en: 'Rock',          de: 'Rock' } },
+  { name: 'Heart',              category: 'Heart (band)',          genre: { en: 'Rock',          de: 'Rock' } },
+  { name: 'Thin Lizzy',         category: 'Thin Lizzy',           genre: { en: 'Rock',          de: 'Rock' } },
+
+  // ── More Metal ─────────────────────────────────────────────────────────────
+  { name: 'Motörhead',          category: 'Motörhead',            genre: { en: 'Metal',         de: 'Metal' } },
+  { name: 'Megadeth',           category: 'Megadeth',             genre: { en: 'Metal',         de: 'Metal' } },
+  { name: 'Slipknot',           category: 'Slipknot (band)',       genre: { en: 'Metal',         de: 'Metal' } },
+  { name: 'Rammstein',          category: 'Rammstein',            genre: { en: 'Metal',         de: 'Metal' } },
+  { name: 'System of a Down',   category: 'System of a Down',     genre: { en: 'Metal',         de: 'Metal' } },
+
+  // ── More Grunge / Alternative ──────────────────────────────────────────────
+  { name: 'Alice in Chains',    category: 'Alice in Chains',      genre: { en: 'Grunge',        de: 'Grunge' } },
+  { name: 'Stone Temple Pilots',category: 'Stone Temple Pilots',  genre: { en: 'Grunge',        de: 'Grunge' } },
+  { name: 'Weezer',             category: 'Weezer',               genre: { en: 'Alternative',   de: 'Alternative' } },
+
+  // ── More Punk / New Wave ───────────────────────────────────────────────────
+  { name: 'Joy Division',       category: 'Joy Division',         genre: { en: 'Post-Punk',     de: 'Post-Punk' } },
+  { name: 'The Smiths',         category: 'The Smiths',           genre: { en: 'Alternative',   de: 'Alternative' } },
+  { name: 'Eurythmics',         category: 'Eurythmics',           genre: { en: 'Synth-Pop',     de: 'Synth-Pop' } },
+  { name: 'Duran Duran',        category: 'Duran Duran',          genre: { en: 'New Wave',      de: 'New Wave' } },
+  { name: 'Simple Minds',       category: 'Simple Minds',         genre: { en: 'New Wave',      de: 'New Wave' } },
+
+  // ── More Electronic ────────────────────────────────────────────────────────
+  { name: 'The Prodigy',        category: 'The Prodigy',          genre: { en: 'Electronic',    de: 'Elektronisch' } },
+  { name: 'Massive Attack',     category: 'Massive Attack',       genre: { en: 'Electronic',    de: 'Elektronisch' } },
+  { name: 'The Chemical Brothers', category: 'The Chemical Brothers', genre: { en: 'Electronic', de: 'Elektronisch' } },
+
+  // ── More Pop ───────────────────────────────────────────────────────────────
+  { name: 'One Direction',      category: 'One Direction (band)', genre: { en: 'Pop',           de: 'Pop' } },
+  { name: 'Justin Timberlake',  category: 'Justin Timberlake',   genre: { en: 'Pop',           de: 'Pop' } },
+  { name: 'Bruno Mars',         category: 'Bruno Mars',           genre: { en: 'Pop',           de: 'Pop' } },
+  { name: 'Katy Perry',         category: 'Katy Perry',           genre: { en: 'Pop',           de: 'Pop' } },
+  { name: 'Ariana Grande',      category: 'Ariana Grande',        genre: { en: 'Pop',           de: 'Pop' } },
+  { name: 'Billie Eilish',      category: 'Billie Eilish',        genre: { en: 'Pop',           de: 'Pop' } },
+  { name: 'BLACKPINK',          category: 'BLACKPINK',            genre: { en: 'K-Pop',         de: 'K-Pop' } },
+
+  // ── More Solo ──────────────────────────────────────────────────────────────
+  { name: 'Chuck Berry',        category: 'Chuck Berry',          genre: { en: "Rock'n'Roll",   de: "Rock'n'Roll" } },
+  { name: 'James Brown',        category: 'James Brown',          genre: { en: 'Soul',          de: 'Soul' } },
+  { name: 'Marvin Gaye',        category: 'Marvin Gaye',          genre: { en: 'Soul',          de: 'Soul' } },
+  { name: 'Tina Turner',        category: 'Tina Turner',          genre: { en: 'Rock',          de: 'Rock' } },
+  { name: 'Diana Ross',         category: 'Diana Ross',           genre: { en: 'Pop',           de: 'Pop' } },
+  { name: 'Dolly Parton',       category: 'Dolly Parton',         genre: { en: 'Country',       de: 'Country' } },
+  { name: 'Rod Stewart',        category: 'Rod Stewart',          genre: { en: 'Rock',          de: 'Rock' } },
+  { name: 'George Michael',     category: 'George Michael',       genre: { en: 'Pop',           de: 'Pop' } },
+  { name: 'Phil Collins',       category: 'Phil Collins',         genre: { en: 'Pop Rock',      de: 'Pop Rock' } },
+  { name: 'Sting',              category: 'Sting (musician)',     genre: { en: 'Pop Rock',      de: 'Pop Rock' } },
+
+  // ── Hip-Hop ────────────────────────────────────────────────────────────────
+  { name: 'Tupac Shakur',       category: 'Tupac Shakur',         genre: { en: 'Hip-Hop',       de: 'Hip-Hop' } },
+  { name: 'The Notorious B.I.G.',category: 'The Notorious B.I.G.', genre: { en: 'Hip-Hop',     de: 'Hip-Hop' } },
+  { name: 'Snoop Dogg',         category: 'Snoop Dogg',           genre: { en: 'Hip-Hop',       de: 'Hip-Hop' } },
+  { name: 'Kendrick Lamar',     category: 'Kendrick Lamar',       genre: { en: 'Hip-Hop',       de: 'Hip-Hop' } },
+  { name: 'Drake',              category: 'Drake (musician)',      genre: { en: 'Hip-Hop',       de: 'Hip-Hop' } },
 ];

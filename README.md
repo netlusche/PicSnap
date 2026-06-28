@@ -21,9 +21,9 @@ A fast-paced, local **pass-the-device multiplayer picture quiz** built with Reac
 | 🗺️ Places & Landmarks | 199 | Wikimedia Commons |
 | 🧑 Famous People | 239 | Wikipedia infobox portraits |
 | 🏛️ History | 108 | Wikimedia Commons |
-| 🎬 Movies | 86 | Wikimedia Commons — with decade as second answer |
-| 🎸 Bands & Musicians | 79 | Wikimedia Commons |
-| 🏅 Sport | 68 | Wikimedia Commons |
+| 🎬 Movies | 139 | Wikimedia Commons — with decade as second answer |
+| 🎸 Bands & Musicians | 126 | Wikimedia Commons |
+| 🏅 Sport | 107 | Wikimedia Commons |
 | 🌍 Geo-Roulette | 85 cities across all continents | Mapillary *(requires token)* |
 
 - **Editorial Portraits over Noisy Categories**: Famous People uses Wikipedia's curated infobox lead image instead of Commons person-categories, which tend to mix in plaques, coins, and house photos.
@@ -101,4 +101,4 @@ This application is a **non-commercial hobby project** developed solely for ente
 
 ## Status
 
-All features complete and playable. v0.2.9.
+All features complete and playable. v0.2.10.
