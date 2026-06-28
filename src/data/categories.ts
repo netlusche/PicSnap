@@ -22,7 +22,7 @@ export const CATEGORIES: CategoryMeta[] = [
   { id: 'geo_roulette', emoji: '🗺️', nameKey: 'cat_geo',     fieldsKey: 'cat_geo_fields',     questionKeys: { primary: 'q_geo_primary', secondary: 'q_geo_secondary' },       source: 'mapillary' },
   { id: 'people',       emoji: '👤', nameKey: 'cat_people',  fieldsKey: 'cat_people_fields',  questionKeys: { primary: 'q_people_primary', secondary: 'q_people_secondary' }, source: 'wikimedia' },
   { id: 'bands',        emoji: '🎸', nameKey: 'cat_bands',   fieldsKey: 'cat_bands_fields',   questionKeys: { primary: 'q_bands_primary', secondary: 'q_bands_secondary' },   source: 'wikimedia' },
-  { id: 'movies',       emoji: '🎬', nameKey: 'cat_movies',  fieldsKey: 'cat_movies_fields',  questionKeys: { primary: 'q_movies_primary' },                                    source: 'json' },
+  { id: 'movies',       emoji: '🎬', nameKey: 'cat_movies',  fieldsKey: 'cat_movies_fields',  questionKeys: { primary: 'q_movies_primary', secondary: 'q_movies_secondary' },  source: 'wikimedia' },
   { id: 'sport',        emoji: '⚽', nameKey: 'cat_sport',   fieldsKey: 'cat_sport_fields',   questionKeys: { primary: 'q_sport_primary', secondary: 'q_sport_secondary' },   source: 'wikimedia' },
   { id: 'history',      emoji: '🏛️', nameKey: 'cat_history', fieldsKey: 'cat_history_fields', questionKeys: { primary: 'q_history_primary', secondary: 'q_history_secondary' }, source: 'wikimedia' },
 ];

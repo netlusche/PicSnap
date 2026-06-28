@@ -63,7 +63,7 @@ async function buildWikimedia<T extends { category: string }>(
   toAnswers: (e: T) => { primary: string; secondary?: string }
 ): Promise<QuizItem[]> {
   const shuffled = shuffleArray(entries);
-  const perEntry = Math.max(4, Math.ceil(target / shuffled.length) + 2);
+  const perEntry = Math.max(10, Math.ceil(target / shuffled.length) + 2);
 
   const results = await Promise.all(
     shuffled.map(async (entry): Promise<QuizItem[]> => {
@@ -160,7 +160,10 @@ function buildForCategory(cat: CategoryId, target: number, lang: Language): Prom
         secondary: lang === 'de' ? e.genre.de : e.genre.en,
       }));
     case 'movies':
-      return buildWikimedia(MOVIES, 'movies', target, (e) => ({ primary: e.title }));
+      return buildWikimedia(MOVIES, 'movies', target, (e) => ({
+        primary: e.title,
+        secondary: lang === 'de' ? `${e.decade}er` : `${e.decade}s`,
+      }));
     case 'sport':
       return buildWikimedia(SPORTS, 'sport', target, (e) => ({
         primary: e.name,
@@ -203,6 +206,14 @@ export async function buildImagePool(
   const richPool = withDistractors([...catQueues.values()].flat());
   const byId = new Map(richPool.map((i) => [i.id, i]));
 
+  // Drop items that ended up with 0 primary distractors — they cannot be played as
+  // multiple-choice. This happens when a category fetched only 1 unique answer overall.
+  for (const [cat, queue] of catQueues.entries()) {
+    catQueues.set(cat, queue.filter(
+      (item) => (byId.get(item.id)?.distractors.primary.length ?? 0) >= 1
+    ));
+  }
+
   // Assign one category per round (shuffled cycle) so all players in a round
   // see the same category.
   const catCycle = shuffleArray([...categories]);
@@ -222,6 +233,17 @@ export async function buildImagePool(
       if (item) pool.push(byId.get(item.id) ?? item);
     }
     catPointers.set(cat, ptr + players);
+  }
+
+  // If any category queues ran short, cycle through existing pool items to reach
+  // the required count. Players may rarely see a repeated image, but the game
+  // stays playable rather than failing with a "too few images" error.
+  const required = players * rounds;
+  if (pool.length > 0 && pool.length < required) {
+    const base = pool.length;
+    for (let i = base; i < required; i++) {
+      pool.push(pool[i % base]);
+    }
   }
 
   return pool;

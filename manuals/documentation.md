@@ -70,7 +70,7 @@ src/
 │   ├── places.ts               # 199 landmark entries
 │   ├── historyItems.ts         # 108 historical-subject entries
 │   ├── bands.ts                # 79 band/musician entries
-│   ├── movies.ts               # 86 film entries
+│   ├── movies.ts               # 86 film entries (with decade field for secondary answer)
 │   ├── sports.ts               # 68 athlete entries
 │   └── cities.ts               # 85 city bounding boxes for Geo-Roulette (all continents)
 ├── components/
@@ -229,9 +229,9 @@ const NON_PHOTO = /\b(map|karte|diagram|plan|grundriss|chart|graph|logo|wappen|
   reconstruction|schema|drawing|zeichnung|engraving|sketch|inscription)\b/i;
 ```
 
-### Per-Category Distractors
+### Per-Category Distractors & Pool Resilience
 
-Distractors (wrong answers shown alongside the correct one) are drawn only from answers within the **same category**. A places image never shows a person's name as a wrong answer. `withDistractors()` is called on the **full per-category fetch queue** (up to `poolTargetSize` items) — not on the tiny round-ordered game pool — so distractor pools remain rich even when a category contributes only one item per round. After distractors are attached to all fetched items, the ordered game pool is assembled by picking from those enriched items, so no second `withDistractors()` pass is needed.
+Distractors (wrong answers shown alongside the correct one) are drawn only from answers within the **same category**. A places image never shows a person's name as a wrong answer. `withDistractors()` is called on the **full per-category fetch queue** (up to `poolTargetSize` items) — not on the tiny round-ordered game pool — so distractor pools remain rich even when a category contributes only one item per round. After distractors are built, any items with zero primary distractors (can happen when a Commons category returns only one unique title) are **filtered out** before the game pool is assembled — guaranteeing all items are playable as multiple-choice. After game pool assembly, if the pool falls short of `players × rounds` (because some category queues were thinner than expected), the pool is **cycled** to reach the exact required count; players may see a rare repeat image but the game always starts. The minimum `perEntry` fetch budget was raised to **10** images per data entry (up from 4) to keep queues rich even when many Commons categories are sparse.
 
 ### QuizItem Interface
 
@@ -274,7 +274,7 @@ interface QuizItem {
 
 ### `src/data/movies.ts`
 
-86 entries: `{ title, category }`. `category` is a Wikimedia Commons category title. Covers silent era, Disney animation classics, and films from the 1930s through the 1990s.
+86 entries: `{ title, category, decade }`. `category` is a Wikimedia Commons category title. `decade` is the release decade base year (e.g. `1970`), formatted as the secondary answer: `"1970s"` (EN) / `"1970er"` (DE). Covers silent era, Disney animation classics, and films from the 1930s through the 1990s.
 
 ### `src/data/sports.ts`
 
@@ -309,7 +309,7 @@ Wikipedia lead images are cached per article title (`wpimg:{title}`). Wikimedia 
 |---|---|
 | `LandingScreen` | First screen on a fresh/reset session: pulsing logo, tagline, "Let's play!" CTA, social share bar (WA / FB / TG / Reddit / copy / native), API footer. Dispatches `GO_TO_SETUP`. |
 | `SetupScreen` | Player names, round count, theme/language picker; collapsible "Liked ❤️" section with lightbox; app footer with API credits + version |
-| `CategoryScreen` | Category selection — none pre-selected, Start Game disabled until ≥1 chosen; triggers pool fetch; shows warning if pool too small |
+| `CategoryScreen` | Category selection — none pre-selected, Start Game disabled until ≥1 chosen; triggers pool fetch; shows error only if all categories returned zero images (pool cycling in fetcher handles minor shortfalls) |
 | `PassDeviceScreen` | Hand-off screen — shows active player name, blurred until "Begin Turn" tapped |
 | `QuizScreen` | 3-2-1 countdown → image display → primary question → secondary question; dispatches `END_TURN` with score |
 | `TurnResultScreen` | Shows correct answer, points earned, updated leaderboard; like-button (❤️) on the revealed image |
@@ -390,7 +390,7 @@ npm run build        # outputs to dist/
 npm run preview      # preview production build locally
 ```
 
-Deployment target: **Strato** static hosting at `https://plando.de/ps`. Upload the `dist/` folder contents after each build.
+Deployment target: **Strato** static hosting at `https://plandoo.de/ps`. Upload the `dist/` folder contents after each build.
 
 Environment variables:
 | Variable | Required | Description |

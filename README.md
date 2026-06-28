@@ -21,15 +21,15 @@ A fast-paced, local **pass-the-device multiplayer picture quiz** built with Reac
 | 🗺️ Places & Landmarks | 199 | Wikimedia Commons |
 | 🧑 Famous People | 239 | Wikipedia infobox portraits |
 | 🏛️ History | 108 | Wikimedia Commons |
-| 🎬 Movies | 86 | Wikimedia Commons |
+| 🎬 Movies | 86 | Wikimedia Commons — with decade as second answer |
 | 🎸 Bands & Musicians | 79 | Wikimedia Commons |
 | 🏅 Sport | 68 | Wikimedia Commons |
 | 🌍 Geo-Roulette | 85 cities across all continents | Mapillary *(requires token)* |
 
 - **Editorial Portraits over Noisy Categories**: Famous People uses Wikipedia's curated infobox lead image instead of Commons person-categories, which tend to mix in plaques, coins, and house photos.
 - **Non-Photo Filter**: Maps, diagrams, coins, stamps, signatures, and logos are filtered out of Wikimedia Commons results via filename pattern matching before they reach the pool.
-- **Per-Category Distractors**: Wrong answers are drawn only from the same category, so a places image never shows a person's name as a wrong answer. Distractor pools are built from the full per-category fetch queue (not just the small round-ordered game pool), so multiple-choice always has enough options even in short games.
-- **Dynamic Pool Sizing**: Target pool size is `max(200, players × rounds × 2)`, fetched in parallel across all selected categories as a buffer against load failures and duplicates.
+- **Per-Category Distractors**: Wrong answers are drawn only from the same category, so a places image never shows a person's name as a wrong answer. Distractor pools are built from the full per-category fetch queue (not just the small round-ordered game pool), so multiple-choice always has enough options even in short games. Items with no usable distractors are filtered before game pool assembly.
+- **Dynamic Pool Sizing**: Target pool size is `max(200, players × rounds × 2)`, fetched in parallel across all selected categories as a buffer against load failures and duplicates. At least 10 images are requested per data entry to ensure a rich queue even when many Commons categories are sparse. If the assembled pool falls slightly short (e.g. a category has fewer Commons images than needed), it is cycled to fill the gap so the game always starts.
 
 ### ❤️ Liked Images
 - **Save Images**: Heart any image on the turn-result screen or the final leaderboard to add it to your persistent Liked Images list (backed by `localStorage`), capped at **40 images**.
@@ -101,4 +101,4 @@ This application is a **non-commercial hobby project** developed solely for ente
 
 ## Status
 
-All features complete and playable. v0.2.8.
+All features complete and playable. v0.2.9.

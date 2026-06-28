@@ -28,12 +28,9 @@ export const CategoryScreen: React.FC = () => {
     try {
       const pool = await buildImagePool(selected, state.players.length, state.totalRounds, state.lang);
 
-      // Pre-game pool validation: need one unique image per turn, and every
-      // item must have at least one distractor so multiple-choice is possible.
-      const required = state.players.length * state.totalRounds;
-      const hasDistractors = pool.every((i) => i.distractors.primary.length >= 1);
-
-      if (pool.length < required || !hasDistractors) {
+      // Pool validation: the fetcher guarantees distractors and cycles to fill
+      // the required count — only fail if all categories returned zero images.
+      if (pool.length === 0) {
         setNotice('pool');
         setIsLoading(false);
         return;

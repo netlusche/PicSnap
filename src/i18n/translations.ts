@@ -64,6 +64,7 @@ export const translations = {
     q_bands_primary: 'Who / which band?',
     q_bands_secondary: 'Genre?',
     q_movies_primary: 'Which movie / series?',
+    q_movies_secondary: 'Which decade?',
     q_sport_primary: 'Who / what?',
     q_sport_secondary: 'Which club or country?',
     q_history_primary: 'What is shown?',
@@ -83,7 +84,7 @@ export const translations = {
     cat_geo_fields: 'Which city? / Which country?',
     cat_people_fields: 'Who is it? / Known for?',
     cat_bands_fields: 'Who / which band? / Genre?',
-    cat_movies_fields: 'Which movie / series?',
+    cat_movies_fields: 'Which movie / series? / Which decade?',
     cat_sport_fields: 'Who / what? / Which club or country?',
     cat_history_fields: 'What is shown? / When (roughly)?',
 
@@ -159,6 +160,7 @@ export const translations = {
     q_bands_primary: 'Wer / welche Band?',
     q_bands_secondary: 'Genre?',
     q_movies_primary: 'Welcher Film / Serie?',
+    q_movies_secondary: 'Welches Jahrzehnt?',
     q_sport_primary: 'Wer / was?',
     q_sport_secondary: 'Welcher Verein oder Land?',
     q_history_primary: 'Was ist zu sehen?',
@@ -178,7 +180,7 @@ export const translations = {
     cat_geo_fields: 'Welche Stadt? / Welches Land?',
     cat_people_fields: 'Wer ist das? / Womit bekannt?',
     cat_bands_fields: 'Wer / welche Band? / Genre?',
-    cat_movies_fields: 'Welcher Film / Serie?',
+    cat_movies_fields: 'Welcher Film / Serie? / Welches Jahrzehnt?',
     cat_sport_fields: 'Wer / was? / Welcher Verein oder Land?',
     cat_history_fields: 'Was ist zu sehen? / Wann (grob)?',
 
